@@ -76,14 +76,23 @@ def lambda_handler(event, context):
     #command = params['command'][0]
     #channel = params['channel_name'][0]
     #command_text = params['text'][0]
-    files = os.listdir("somedirectory")
+
+    s3 = boto3.resource('s3')
+    s3_client = boto3.client('s3')
+
+    bucket = "maps42"
+    key = "lambda_function.py"
+    s3_client.upload_file('./lambda_function.py', bucket, key)
+
+
+    files = os.listdir(".")
     response = {
         "response_type": "ephemeral",
-        "text": str(files) + "And the response for `/map` is:",
+        "text": str(files) + "\n" + str(event) + "\n" + str(context),
         "attachments": [
             {
                 "title": "Something something",
-                "image_url": "http://placehold.it/200x200.jpg",
+                "image_url": "https://s3.amazonaws.com/maps42/example_file.png",
                 "color": "#764FA0"
             }
         ]
