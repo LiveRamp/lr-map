@@ -46,7 +46,8 @@ from base64 import b64decode
 from urlparse import parse_qs
 import os
 
-import json
+# from PIL import Image, ImageDraw
+import time
 
 
 #ENCRYPTED_EXPECTED_TOKEN = os.environ['kmsEncryptedToken']
@@ -81,9 +82,9 @@ def lambda_handler(event, context):
 
     # data = json.loads(event, encoding=)
     # json.JSONDecoder.decode(event)
-    arguments = event[u'queryStringParameters'][u'text']
+    # arguments = event[u'queryStringParameters'][u'text']
 
-    argumentsInt = int(arguments)
+    # argumentsInt = int(arguments)
     
 
 
@@ -92,15 +93,16 @@ def lambda_handler(event, context):
     s3_client = boto3.client('s3')
 
     bucket = "maps42"
-    filename = "newfile.txt"
+    filename = "newfile" + str(time.strftime("%H:%M:%S")) + ".txt"
     filepath = "/tmp/" + filename
     file = open(filepath, 'w+')
     file.write("abc")
-    s3_client.upload_file('/tmp/newfile.txt', bucket, filename)
+    s3_client.upload_file('/tmp/' + filename, bucket, filename)
 
     image_url = "https://s3.amazonaws.com/maps42/example_file.png"
     title = "Something something"
-    text = str(arguments)
+    # text = str(arguments)
+    text = ""
 
     response = {
         "response_type": "ephemeral",
