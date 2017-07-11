@@ -44,6 +44,7 @@ import os
 
 from base64 import b64decode
 from urlparse import parse_qs
+import os
 
 
 #ENCRYPTED_EXPECTED_TOKEN = os.environ['kmsEncryptedToken']
@@ -75,9 +76,10 @@ def lambda_handler(event, context):
     #command = params['command'][0]
     #channel = params['channel_name'][0]
     #command_text = params['text'][0]
+    files = os.listdir("somedirectory")
     response = {
         "response_type": "ephemeral",
-        "text": "And the response for `/map` is:",
+        "text": str(files) + "And the response for `/map` is:",
         "attachments": [
             {
                 "title": "Something something",
