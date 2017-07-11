@@ -66,7 +66,7 @@ def respond(err, res=None):
 
 
 def lambda_handler(event, context):
-    #params = parse_qs(event['body'])
+    # params = parse_qs(event['body'])
     #token = params['token'][0]
     # if token != expected_token:
         # logger.error("Request token (%s) does not match expected", token)
@@ -76,6 +76,7 @@ def lambda_handler(event, context):
     #command = params['command'][0]
     #channel = params['channel_name'][0]
     #command_text = params['text'][0]
+
 
     s3 = boto3.resource('s3')
     s3_client = boto3.client('s3')
@@ -87,15 +88,17 @@ def lambda_handler(event, context):
     file.write("abc")
     s3_client.upload_file('/tmp/newfile.txt', bucket, filename)
 
+    image_url = "https://s3.amazonaws.com/maps42/example_file.png"
+    title = "Something something"
+    text = str(event) + "\n" + str(context) + "\n" #+ event['body']
 
-    files = os.listdir(".")
     response = {
         "response_type": "ephemeral",
-        "text": str(files) + "\n" + str(event) + "\n" + str(context),
+        "text": text,
         "attachments": [
             {
-                "title": "Something something",
-                "image_url": "https://s3.amazonaws.com/maps42/example_file.png",
+                "title": title,
+                "image_url": image_url,
                 "color": "#764FA0"
             }
         ]
