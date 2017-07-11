@@ -46,6 +46,8 @@ from base64 import b64decode
 from urlparse import parse_qs
 import os
 
+import json
+
 
 #ENCRYPTED_EXPECTED_TOKEN = os.environ['kmsEncryptedToken']
 
@@ -77,6 +79,14 @@ def lambda_handler(event, context):
     #channel = params['channel_name'][0]
     #command_text = params['text'][0]
 
+    # data = json.loads(event, encoding=)
+    # json.JSONDecoder.decode(event)
+    arguments = event[u'queryStringParameters'][u'text']
+
+    argumentsInt = int(arguments)
+    
+
+
 
     s3 = boto3.resource('s3')
     s3_client = boto3.client('s3')
@@ -90,7 +100,7 @@ def lambda_handler(event, context):
 
     image_url = "https://s3.amazonaws.com/maps42/example_file.png"
     title = "Something something"
-    text = str(event) + "\n" + str(context) + "\n" #+ event['body']
+    text = str(arguments)
 
     response = {
         "response_type": "ephemeral",
