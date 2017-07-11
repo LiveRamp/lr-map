@@ -54,7 +54,6 @@ from urlparse import parse_qs
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
-
 def respond(err, res=None):
     return {
         'statusCode': '400' if err else '200',
@@ -81,9 +80,9 @@ def lambda_handler(event, context):
         "text": "And the response for `/map` is:",
         "attachments": [
             {
-                "text": '''
-                Hello Florian!
-                '''
+                "title": "Something something",
+                "image_url": "http://placehold.it/200x200.jpg",
+                "color": "#764FA0"
             }
         ]
     }
