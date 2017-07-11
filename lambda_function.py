@@ -81,8 +81,11 @@ def lambda_handler(event, context):
     s3_client = boto3.client('s3')
 
     bucket = "maps42"
-    key = "lambda_function.py"
-    s3_client.upload_file('./lambda_function.py', bucket, key)
+    filename = "newfile.txt"
+    filepath = "/tmp/" + filename
+    file = open(filepath, 'w+')
+    file.write("abc")
+    s3_client.upload_file('/tmp/newfile.txt', bucket, filename)
 
 
     files = os.listdir(".")
