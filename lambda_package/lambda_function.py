@@ -46,14 +46,8 @@ from base64 import b64decode
 from urlparse import parse_qs
 import os
 
-# from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw
 import time
-
-
-#ENCRYPTED_EXPECTED_TOKEN = os.environ['kmsEncryptedToken']
-
-#kms = boto3.client('kms')#
-#expected_token = kms.decrypt(CiphertextBlob=b64decode(ENCRYPTED_EXPECTED_TOKEN))['Plaintext']
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -69,24 +63,9 @@ def respond(err, res=None):
 
 
 def lambda_handler(event, context):
-    # params = parse_qs(event['body'])
-    #token = params['token'][0]
-    # if token != expected_token:
-        # logger.error("Request token (%s) does not match expected", token)
-        # return respond(Exception('Invalid request token'))
-
-    #user = params['user_name'][0]
-    #command = params['command'][0]
-    #channel = params['channel_name'][0]
-    #command_text = params['text'][0]
-
-    # data = json.loads(event, encoding=)
-    # json.JSONDecoder.decode(event)
     # arguments = event[u'queryStringParameters'][u'text']
 
     # argumentsInt = int(arguments)
-    
-
 
 
     s3 = boto3.resource('s3')
@@ -116,5 +95,3 @@ def lambda_handler(event, context):
         ]
     }
     return respond(None, response)
-    #return respond(None, "Hello world!")
-    #return respond(None, "%s invoked %s in %s with the following text: %s" % (user, command, channel, command_text))
