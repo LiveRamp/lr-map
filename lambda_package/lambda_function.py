@@ -49,6 +49,9 @@ import os
 from PIL import Image, ImageDraw
 import time
 
+from slack import create_slack_response
+
+
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
@@ -78,20 +81,7 @@ def lambda_handler(event, context):
     file.write("abc")
     s3_client.upload_file('/tmp/' + filename, bucket, filename)
 
-    image_url = "https://s3.amazonaws.com/maps42/example_file.png"
-    title = "Something something"
-    # text = str(arguments)
-    text = ""
+    image_url =  "https://s3.amazonaws.com/maps42/result.gif"
 
-    response = {
-        "response_type": "ephemeral",
-        "text": text,
-        "attachments": [
-            {
-                "title": title,
-                "image_url": image_url,
-                "color": "#764FA0"
-            }
-        ]
-    }
+    response = create_slack_response("Tomasz", image_url)
     return respond(None, response)
