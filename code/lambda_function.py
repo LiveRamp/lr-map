@@ -22,8 +22,28 @@ logger.setLevel(logging.INFO)
 locations = {
   "Dominion": (0.1, 0.6),
   "Center": (0.5, 0.5),
-  "Corner": (0.0, 0.0)
+  "Corner": (0.85, 0.85)
 }
+
+dynamodb_client = boto3.client('dynamodb')
+
+def insert_hardcoded_into_db():
+  for location in locations:
+    (x, y) = locations[location]
+    dynamodb_client.put_item(
+      TableName="Locations",
+      Item={
+        "entityName": {
+          "S": location
+        },
+          "x": {
+            "S": str(x)
+          },
+          "y": {
+            "S": str(y)
+          }
+        }
+    )
 
 def respond(err, res=None):
     return {
@@ -34,22 +54,40 @@ def respond(err, res=None):
         },
     }
 
+def get_location(locationName):
+  response = dynamodb_client.get_item(
+    TableName="Locations",
+    Key= {
+      "entityName": {
+        "S": locationName
+      }
+    }
+  )
+  logger.info("Response: " + str(response))
+
+  # TODO: react if the conference room is missing
+  location_x = float(response[u"Item"][u"x"][u"S"])
+  location_y = float(response[u"Item"][u"y"][u"S"])
+
+  return (float(response[u"Item"][u"x"][u"S"]), float(response[u"Item"][u"y"][u"S"]))
+
 def create_and_upload_image(event, context):
+    insert_hardcoded_into_db()
+
     try:
-        location = event[u'queryStringParameters'][u'text']
+        locationName = event[u'queryStringParameters'][u'text']
     except KeyError:
         return respond(None, create_failed_slack_response("Are you sure this message was sent from Slack?"))
 
-    try:
-        (location_x, location_y) = locations[location]
-    except KeyError:
-      return respond(None, create_failed_slack_response("Please provide a valid conference room name."))
+    # TODO: react if the conference room is missing
+    location_x, location_y = get_location(locationName)
+
 
     s3 = boto3.resource('s3')
     s3_client = boto3.client('s3')
 
     bucket = "maps42"
-    filename = "location" + str(time.strftime("%H:%M")) + ".gif"
+    filename = locationName + str(time.strftime("%H:%M")) + ".gif"
     filepath = "/tmp/" + filename
 
     try:
@@ -62,7 +100,7 @@ def create_and_upload_image(event, context):
 
     image_url =  "https://s3.amazonaws.com/maps42/" + filename
 
-    response = create_slack_response("Tomasz", image_url, location)
+    response = create_slack_response("Tomasz", image_url, locationName)
     return respond(None, response)
 
 

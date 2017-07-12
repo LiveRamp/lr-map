@@ -11,4 +11,5 @@ cp -r $DIRECTORY_WITH_FILES_TO_BE_COPIED/* $BUILD_DIR
 
 ditto -c -k --sequesterRsrc $BUILD_DIR $ARCHIVE_FILENAME
 aws lambda update-function-code --function-name $AWS_LAMBDA_FUNCTION_NAME --zip-file fileb://$ARCHIVE_FILENAME
+rm -r $BUILD_DIR
 rm $ARCHIVE_FILENAME
