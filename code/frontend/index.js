@@ -9,16 +9,10 @@ window.onload = function() {
         return;
     x = (e.pageX - this.offsetLeft) / this.clientWidth
     y = (e.pageY - this.offsetTop) / this.clientHeight
-
-    document.getElementById("x").innerHTML="x: " + x; 
-    document.getElementById("y").innerHTML="y: " + y; 
-    console.log(e)
     updatePinLocation()
   });
 
-  window.addEventListener('resize', function(e) {
-    updatePinLocation();
-  });
+  window.addEventListener('resize', updatePinLocation);
 
   function updatePinLocation() {
     var pin_size = pin_size_ratio * image_element.clientWidth
@@ -29,9 +23,15 @@ window.onload = function() {
       .setAttribute("style","width:" + pin_size + "px; height:" + pin_size + "px; display:block;top: " + pin_y + "px; left:" + pin_x + "px;");
   }
 
-  new Clipboard('#copy', {
-      text: function(trigger) {
-          return x + "," + y
-      }
+  alertify.parent(image_element);
+  document.getElementById('update').addEventListener('click', function (e) {
+    alertify.delay(2000).closeLogOnClick(true).log("Updating location for <>");
+    setTimeout(function(){
+      alertify.delay(2000).closeLogOnClick(true).success("Successfully updated location for <>");
+    }, 1000);
+    setTimeout(function(){
+      alertify.delay(2000).closeLogOnClick(true).error("There was an error while updating location for <>");
+    }, 3000);
   });
+
 }
