@@ -5,8 +5,9 @@ def create_slack_response (location_for, image_url):
             {
                 "attachments": [
                     {
-                        "fallback": "Location for " + location_for,
-                        "pretext": "Location for " + location_for,
+                        "title": "Change location in browser",
+                        "title_link": image_url,
+                        "text": "Location for " + location_for,
                         "color": "#36a64f",
                         "image_url": image_url,
                         "attachment_type": "default",
