@@ -20,26 +20,34 @@ def respond(err, res=None):
     }
 
 def lambda_handler(event, context):
-    logger.info("event:" + str(event))
-    logger.info("context:" + str(context))
+    # logger.info("event:" + str(event))
+    # logger.info("context:" + str(context))
 
-    location = event[u"entityName"]
-    x = event[u"x"]
-    y = event[u"y"]
+    # location = event[u"entityName"]
+    # x = event[u"x"]
+    # y = event[u"y"]
 
-    dynamodb_client.put_item(
-      TableName="Locations",
-      Item={
-        "entityName": {
-          "S": location
+    # dynamodb_client.put_item(
+    #   TableName="Locations",
+    #   Item={
+    #     "entityName": {
+    #       "S": location
+    #     },
+    #       "x": {
+    #         "S": str(x)
+    #       },
+    #       "y": {
+    #         "S": str(y)
+    #       }
+    #     }
+    # )
+    body = "<html><head><title>HTML from API Gateway/Lambda</title></head><body><h1><font color=\"red\">HTML from API Gateway/Lambda</h1></body></html>"
+    return {
+        'statusCode': '200',
+        'body': body,
+        'headers': {
+            'Content-Type': 'text/html',
         },
-          "x": {
-            "S": str(x)
-          },
-          "y": {
-            "S": str(y)
-          }
-        }
-    )
+    }
 
     return respond(None, "Yay it worked")
