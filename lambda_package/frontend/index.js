@@ -29,9 +29,16 @@ window.onload = function() {
       .setAttribute("style","width:" + pin_size + "px; height:" + pin_size + "px; display:block;top: " + pin_y + "px; left:" + pin_x + "px;");
   }
 
-  new Clipboard('#copy', {
-      text: function(trigger) {
-          return x + "," + y
-      }
+//  new Clipboard('#copy', {
+//      text: function(trigger) {
+//          return x + "," + y
+//      }
+//  });
+  vex.defaultOptions.className = 'vex-theme-os'
+  document.getElementById('copy').addEventListener('click', function (e) {
+    vex.dialog.alert({
+        message: 'Testing the wireframe theme.',
+    })
   });
+
 }
