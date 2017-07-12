@@ -25,13 +25,15 @@ locations = {
   "Corner": (0.85, 0.85)
 }
 
+LOCATIONS_TABLE_NAME = "Locations"
+
 dynamodb_client = boto3.client('dynamodb')
 
 def insert_hardcoded_into_db():
   for location in locations:
     (x, y) = locations[location]
     dynamodb_client.put_item(
-      TableName="Locations",
+      TableName=LOCATIONS_TABLE_NAME,
       Item={
         "entityName": {
           "S": location
@@ -56,7 +58,7 @@ def respond(err, res=None):
 
 def get_location(locationName):
   response = dynamodb_client.get_item(
-    TableName="Locations",
+    TableName=LOCATIONS_TABLE_NAME,
     Key= {
       "entityName": {
         "S": locationName
