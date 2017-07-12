@@ -11,6 +11,7 @@ from PIL import Image, ImageDraw
 import time
 
 from slack import create_slack_response
+from image import create_location_image
 
 
 logger = logging.getLogger()
