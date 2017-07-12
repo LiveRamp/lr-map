@@ -32,7 +32,7 @@ body {
   width: 200px;
   color: #333;
   background-color: white;
-  border: 1px solid #333;
+  border: 1.5px solid #333;
   display: inline-block;
   margin-bottom: 0;
   font-weight: normal;
@@ -51,5 +51,14 @@ body {
 .btn:hover {
   color: #e6e6e6;
   background: #333;
-  border-color: #e6e6e6;
+}
+
+.button-disabled {
+  opacity: 0.5;
+  background: #333;
+  color: #e6e6e6;
+  cursor: not-allowed;
+}
+
+.button-disabled:hover {
 }
