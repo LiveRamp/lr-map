@@ -1,32 +1,23 @@
 body {
   display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
   font-family: 'Source Code Pro', monospace;
   margin: 0;
   padding: 0;
 }
 
 #image-container {
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  width: 100vw;
-  height: calc(100vw * 0.5006385696);
+  width: 80vw;
+  height: calc(80vw * 0.5006385696);
   background-image: url("../img/16th.png");
   background-size: contain;
   background-repeat: no-repeat;
-}
-
-#result-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  width: 300px;
-  height: 100px;
-  background: #333;
-  margin-bottom: 50px;
-  border-radius: 5px;
-  color: #e6e6e6;
 }
 
 #pin {
@@ -38,9 +29,10 @@ body {
 }
 
 .btn {
+  width: 200px;
   color: #333;
-  background-color: #e6e6e6;
-  border-color: #ccc;
+  background-color: white;
+  border: 1px solid #333;
   display: inline-block;
   margin-bottom: 0;
   font-weight: normal;
@@ -49,12 +41,10 @@ body {
   touch-action: manipulation;
   cursor: pointer;
   background-image: none;
-  border: 1px solid transparent;
   white-space: nowrap;
   padding: 6px 12px;
   font-size: 14px;
   line-height: 1.42857143;
-  border-radius: 4px;
   text-decoration: none;
 }
 
