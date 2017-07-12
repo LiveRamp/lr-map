@@ -10,7 +10,7 @@ import os
 from PIL import Image, ImageDraw
 import time
 
-from slack import create_slack_response
+from slack import create_slack_response, create_failed_slack_response
 from image import create_location_image
 
 
@@ -25,17 +25,26 @@ locations = {
 
 def respond(err, res=None):
     return {
-            'statusCode': '400' if err else '200',
-            'body': err.message if err else res,
-            'headers': {
-                'Content-Type': 'application/json',
-                },
-            }
+        'statusCode': '400' if err else '200',
+        'body': err.message if err else res,
+        'headers': {
+            'Content-Type': 'application/json',
+        },
+    }
 
 def create_and_upload_image(event, context):
-    # arguments = event[u'queryStringParameters'][u'text']
-    # (location_x, location_y) = locations[arguments]
-    (location_x, location_y) = (0.5, 0.5)
+    try:
+        location = event[u'queryStringParameters'][u'text']
+    except KeyError:
+        return respond(None, create_failed_slack_response("Are you sure this message was sent from Slack?"))
+
+    try:
+        (location_x, location_y) = locations[location]
+    except KeyError:
+      return respond(None, create_failed_slack_response("Please provide a valid conference room name."))
+
+    print event
+    # (location_x, location_y) = (0.5, 0.5)
 
     s3 = boto3.resource('s3')
     s3_client = boto3.client('s3')
@@ -48,7 +57,7 @@ def create_and_upload_image(event, context):
 
     image_url =  "https://s3.amazonaws.com/maps42/" + filename
 
-    response = create_slack_response("Tomasz", image_url)
+    response = create_slack_response("Tomasz", image_url, location)
     return respond(None, response)
 
 
