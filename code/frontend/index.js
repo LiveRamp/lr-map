@@ -1,37 +1,80 @@
+var urlParams;
+(window.onpopstate = function () {
+    var match,
+        pl     = /\+/g,  // Regex for replacing addition symbol with a space
+        search = /([^&=]+)=?([^&]*)/g,
+        decode = function (s) { return decodeURIComponent(s.replace(pl, " ")); },
+        query  = window.location.search.substring(1);
+
+    urlParams = {};
+    while (match = search.exec(query))
+       urlParams[decode(match[1])] = decode(match[2]);
+})();
+
 window.onload = function() {
   var image_element = document.getElementById('image-container')
+  var pin_element = document.getElementById('pin')
+  var button_element = document.getElementById('update')
   var pin_size_ratio = 0.027
   var x;
   var y;
+  var processingUpdate = false;
    
+  alertify.parent(image_element);
+  alertify.maxLogItems(1);
+
+  window.addEventListener('resize', updatePinLocation);
+
   image_element.addEventListener('click', function (e) {
-    if (e.target !== this)
+    if (e.target !== this && e.target !== pin_element)
         return;
     x = (e.pageX - this.offsetLeft) / this.clientWidth
     y = (e.pageY - this.offsetTop) / this.clientHeight
     updatePinLocation()
   });
 
-  window.addEventListener('resize', updatePinLocation);
-
   function updatePinLocation() {
     var pin_size = pin_size_ratio * image_element.clientWidth
     var pin_x = x * image_element.clientWidth - pin_size / 2
     var pin_y = y * image_element.clientHeight - pin_size
-    
-    document.getElementById('pin')
-      .setAttribute("style","width:" + pin_size + "px; height:" + pin_size + "px; display:block;top: " + pin_y + "px; left:" + pin_x + "px;");
+    pin_element.setAttribute("style","width:" + pin_size + "px; height:" + pin_size + "px; display:block;top: " + pin_y + "px; left:" + pin_x + "px;");
   }
 
-  alertify.parent(image_element);
   document.getElementById('update').addEventListener('click', function (e) {
-    alertify.delay(2000).closeLogOnClick(true).log("Updating location for <>");
-    setTimeout(function(){
-      alertify.delay(2000).closeLogOnClick(true).success("Successfully updated location for <>");
-    }, 1000);
-    setTimeout(function(){
-      alertify.delay(2000).closeLogOnClick(true).error("There was an error while updating location for <>");
-    }, 3000);
-  });
+    if (!processingUpdate) {
+      setProcessing(true)
+      var name = urlParams.entityname;
+      var loadingMsg = '<i class="fa fa-circle-o-notch fa-spin fa-fw"></i> Updating location for "' + name + '"'
+      var successMsg = '<i class="fa fa-check fa-fw"></i> Successfully updated location for "' + name + '"'
+      var errorMsg = '<i class="fa fa-times fa-fw"></i> There was an error while updating location for "' + name + '"'
 
+      alertify.closeLogOnClick(true).log(loadingMsg);
+      axios.post('https://1aw7zewd9c.execute-api.us-east-1.amazonaws.com/prod/addToMapDb', {
+        entityName: name,
+        x: x,
+        y: y
+      }).then(function (response) {
+          setTimeout(function(){
+            alertify.delay(4000).closeLogOnClick(true).success(successMsg);
+            setProcessing(false)
+          }, 3000);
+        })
+        .catch(function (error) {
+          setTimeout(function(){
+            alertify.delay(4000).closeLogOnClick(true).error(errorMsg);
+            setProcessing(false)
+          }, 5000);
+        })
+    }
+  });
+  
+  function setProcessing(value) {
+    processingUpdate = value;
+    if (processingUpdate) {
+      button_element.classList.add('button-disabled');
+    } else {
+      button_element.classList.remove('button-disabled');
+    }
+
+  }
 }
