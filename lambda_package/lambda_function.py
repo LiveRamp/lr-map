@@ -13,6 +13,8 @@ import time
 from slack import create_slack_response, create_failed_slack_response
 from image import create_location_image
 
+from botocore.exceptions import ClientError
+
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -43,17 +45,20 @@ def create_and_upload_image(event, context):
     except KeyError:
       return respond(None, create_failed_slack_response("Please provide a valid conference room name."))
 
-    print event
-    # (location_x, location_y) = (0.5, 0.5)
-
     s3 = boto3.resource('s3')
     s3_client = boto3.client('s3')
 
     bucket = "maps42"
-    filename = "newfile" + str(time.strftime("%H:%M:%S")) + ".gif"
+    filename = "location" + str(time.strftime("%H:%M")) + ".gif"
     filepath = "/tmp/" + filename
-    create_location_image(location_x, location_y, filepath)
-    s3_client.upload_file(filepath, bucket, filename)
+
+    try:
+      s3_client.head_object(Bucket=bucket, Key=filename)
+      logger.info("The file already exists, so a new one will not be created.")
+    except ClientError as e:
+      logger.info("Creating the file because of the error: " + str(e))
+      create_location_image(location_x, location_y, filepath)
+      s3_client.upload_file(filepath, bucket, filename)
 
     image_url =  "https://s3.amazonaws.com/maps42/" + filename
 
