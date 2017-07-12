@@ -1,0 +1,65 @@
+body {
+  display: flex;
+  font-family: 'Source Code Pro', monospace;
+  margin: 0;
+  padding: 0;
+}
+
+#image-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  width: 100vw;
+  height: calc(100vw * 0.5006385696);
+  background-image: url("../img/16th.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+#result-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 300px;
+  height: 100px;
+  background: #333;
+  margin-bottom: 50px;
+  border-radius: 5px;
+  color: #e6e6e6;
+}
+
+#pin {
+  position: absolute;
+  background-image: url("../img/pin.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  display: hidden;
+}
+
+.btn {
+  color: #333;
+  background-color: #e6e6e6;
+  border-color: #ccc;
+  display: inline-block;
+  margin-bottom: 0;
+  font-weight: normal;
+  text-align: center;
+  vertical-align: middle;
+  touch-action: manipulation;
+  cursor: pointer;
+  background-image: none;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  padding: 6px 12px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  border-radius: 4px;
+  text-decoration: none;
+}
+
+.btn:hover {
+  color: #e6e6e6;
+  background: #333;
+  border-color: #e6e6e6;
+}
