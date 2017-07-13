@@ -10,7 +10,7 @@ import os
 from PIL import Image, ImageDraw
 import time
 
-from slack import create_slack_response, create_failed_slack_response, create_slack_response_no_image
+from slack import create_slack_response, create_failed_slack_response, create_slack_response_not_found
 from image import create_location_image
 
 from botocore.exceptions import ClientError
@@ -93,7 +93,7 @@ def create_and_upload_image(event, context):
     try:
       location_x, location_y = get_location(escapedLocationName)
     except Exception as e:
-      response = create_slack_response_no_image(locationName, change_url)
+      response = create_slack_response_not_found(locationName, change_url)
       return respond(None, response)
 
     bucket = "maps42"
