@@ -16,6 +16,7 @@ from image import create_location_image
 from botocore.exceptions import ClientError
 
 import urllib
+import hashlib
 
 
 logger = logging.getLogger()
@@ -86,7 +87,7 @@ def create_and_upload_image(event, context):
     change_url = link_to_frontend + "?name=" + display_name + "&data=" + urllib.quote(json.dumps(data))
 
     try:
-      db_results = query_db(escapedLocationName)
+      db_results = query_db(locationName)
       for key, val in db_results.items():
         exec(key + '=val')
     except Exception as e:
@@ -94,7 +95,11 @@ def create_and_upload_image(event, context):
       return respond(None, response)
 
     bucket = "maps42"
-    filename = escapedLocationName + str(time.strftime("%H:%M:%S")) + ".gif"
+    # filename = escapedLocationName + str(time.strftime("%H:%M:%S")) + ".gif"
+    md5 = hashlib.md5()
+    md5.update(escapedLocationName)
+    filename = str(md5.hexdigest()) + "_" + str(time.strftime("%H:%M:%S")) + ".gif"
+    # filename = hashlib.md5(escapedLocationName)
     filepath = "/tmp/" + filename
 
     try:
@@ -107,7 +112,7 @@ def create_and_upload_image(event, context):
 
     image_url =  "https://s3.amazonaws.com/maps42/" + filename
 
-    response = create_slack_response(locationName, image_url, change_url, created_by, created_on)
+    response = create_slack_response(locationName + ", link: " + image_url, image_url, change_url, created_by, created_on)
     return respond(None, response)
 
 
