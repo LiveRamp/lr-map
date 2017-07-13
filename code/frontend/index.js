@@ -51,7 +51,7 @@ window.onload = function() {
       alertify.closeLogOnClick(true).log(loadingMsg);
 
       var url = 'https://1aw7zewd9c.execute-api.us-east-1.amazonaws.com/prod/addToMapDb?name=' 
-        + encodeURIComponent(name) + "&x=" + x + "&y=" + y;
+        + name + "&x=" + x + "&y=" + y;
 
       var script = document.createElement('script');
       script.setAttribute('src', url);

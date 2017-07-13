@@ -15,6 +15,8 @@ from image import create_location_image
 
 from botocore.exceptions import ClientError
 
+import urllib
+
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -82,6 +84,7 @@ def create_and_upload_image(event, context):
         return respond(None, create_failed_slack_response("Are you sure this message was sent from Slack?"))
 
     # TODO: react if the conference room is missing
+    locationName = urllib.quote(locationName)
     location_x, location_y = get_location(locationName)
 
 
@@ -101,8 +104,10 @@ def create_and_upload_image(event, context):
       s3_client.upload_file(filepath, bucket, filename)
 
     image_url =  "https://s3.amazonaws.com/maps42/" + filename
+    link_to_frontend = "http://mapsstatic.s3-website-us-east-1.amazonaws.com/"
+    change_url = link_to_frontend + "?entityname=" + locationName
 
-    response = create_slack_response("Tomasz", image_url, locationName)
+    response = create_slack_response("Tomasz", image_url, change_url, locationName)
     return respond(None, response)
 
 

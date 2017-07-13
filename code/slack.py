@@ -1,12 +1,12 @@
 import json
 
-def create_slack_response (location_for, image_url, location):
+def create_slack_response (location_for, image_url, change_url, location):
     return json.dumps(
             {
                 "attachments": [
                     {
                         "title": "Change location in browser",
-                        "title_link": image_url,
+                        "title_link": change_url,
                         "text": "Location of " + location + " for user " + location_for,
                         "color": "#36a64f",
                         "image_url": image_url,
