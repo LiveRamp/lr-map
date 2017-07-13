@@ -20,11 +20,50 @@ def respond(err, res=None):
     }
 
 def lambda_handler(event, context):
-    logger.info("event:" + str(event))
-    logger.info("context:" + str(context))
+    # logger.info("event:" + str(event))
+    # logger.info("context:" + str(context))
+    text = str(event)
+    reply = 'var result = { success: true, text : "' + text + '" }'
+    return respond(None, reply)
+    # return respond(None, str(event) + str(context))
 
-    body = event[u"body"]
-    jsonDict = json.loads(body)
+    # body = event[u"body"]
+    # jsonDict = json.loads(body)
+
+    # htmlFile = '''
+    # <html>
+    #   <head>
+    #     <meta name="viewport" content="width=device-width, minimum-scale=0.1">
+    #     <title>16th.png (2584x1293)</title>
+    #     <script src='index.js'></script>
+    #   <link rel="stylesheet" type="text/css" href="style.css">
+    #   <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet">
+    #   <script src="https://use.fontawesome.com/0bdbe2307d.js"></script>
+    #   <script src="https://cdn.rawgit.com/alertifyjs/alertify.js/v1.0.10/dist/js/alertify.js"></script>
+    #   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    #   </head>
+    #   <body>
+    #     <iframe style="height:100%;width:100%;" frameBorder="0" src="http://mapsstatic.s3-website-us-east-1.amazonaws.com/"></iframe>
+    #   </body>
+    # </html>
+    # '''
+    # htmlFile = '''
+    # var test = function() {
+    #      axios.post('https://1aw7zewd9c.execute-api.us-east-1.amazonaws.com/prod/addToMapDb', {
+    #         entityName: "test",
+    #         x: "0.5",
+    #         y: "0.5"
+    #       });
+    # }
+    # '''
+
+    # return {
+    #     'statusCode': '200',
+    #     'body': htmlFile,
+    #     'headers': {
+    #         'Content-Type': 'text/html',
+    #     },
+    # }
 
     # location = jsonDict["entityName"]
     # x = event["x"]
@@ -54,5 +93,5 @@ def lambda_handler(event, context):
     #     },
     # }
 
-    return respond(None, "Yay it worked" + str(jsonDict))
-    return respond(None, "Yay it worked")
+    # return respond(None, "Yay it worked" + str(jsonDict))
+    # return respond(None, "Yay it worked")
