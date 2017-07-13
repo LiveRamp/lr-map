@@ -84,14 +84,22 @@ def create_and_upload_image(event, context):
 
     try:
         locationName = event[u'queryStringParameters'][u'text']
+        requesterUserName = event[u'queryStringParameters'][u'user_name']
+        requesterUserId = event[u'queryStringParameters'][u'user_id']
     except KeyError:
         return respond(None, create_failed_slack_response("Are you sure this message was sent from Slack?"))
 
-    # TODO: react if the conference room is missing
     escapedLocationName = urllib.quote(locationName)
 
     link_to_frontend = "http://mapsstatic.s3-website-us-east-1.amazonaws.com/"
-    change_url = link_to_frontend + "?entityname=" + escapedLocationName + "&createdby=" + "TODO"
+    expandedUserName = "<@" + requesterUserId + "|" + requesterUserName + ">"
+    change_url = link_to_frontend + "?entityname=" + escapedLocationName + "&createdby=" + expandedUserName
+    data = {
+      "expandedUserName" : expandedUserName,
+      "locationName": locationName
+    }
+    change_url = link_to_frontend + "?entityname=" + escapedLocationName + "&data=" + urllib.quote(json.dumps(data))
+    # change_url = "abc"
 
     try:
       db_results = query_db(escapedLocationName)
