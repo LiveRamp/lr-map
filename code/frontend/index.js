@@ -51,6 +51,7 @@ window.onload = function() {
   update_element.addEventListener('click', function (e) {
     if (!processingUpdate) {
       setProcessing(true)
+      var name = urlParams.name
       var loadingMsg = '<i class="fa fa-circle-o-notch fa-spin fa-fw"></i> Updating location for "' + name + '"'
       var successMsg = '<i class="fa fa-check fa-fw"></i> Successfully updated location for "' + name + '"'
       var errorMsg = '<i class="fa fa-times fa-fw"></i> There was an error while updating location for "' + name + '"'
@@ -58,7 +59,7 @@ window.onload = function() {
       alertify.closeLogOnClick(true).log(loadingMsg);
 
       var url = 'https://1aw7zewd9c.execute-api.us-east-1.amazonaws.com/prod/addToMapDb?data=' 
-        + urlParams.data + "&x=" + x + "&y=" + y + "&floor=" + floor;
+        + encodeURIComponent(urlParams.data) + "&x=" + x + "&y=" + y + "&floor=" + floor;
 
       var script = document.createElement('script');
       script.setAttribute('src', url);
