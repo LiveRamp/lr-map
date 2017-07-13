@@ -50,30 +50,36 @@ window.onload = function() {
 
       alertify.closeLogOnClick(true).log(loadingMsg);
 
-      var url = 'https://1aw7zewd9c.execute-api.us-east-1.amazonaws.com/prod/addToMapDb?' 
-        + encodeURIComponent(name) + "?" + x + "?" + y + "?";
+      var url = 'https://1aw7zewd9c.execute-api.us-east-1.amazonaws.com/prod/addToMapDb?name=' 
+        + encodeURIComponent(name) + "&x=" + x + "&y=" + y;
 
       var script = document.createElement('script');
       script.setAttribute('src', url);
+      script.addEventListener('error', function () {
+        scriptLoaded(false)
+      })
+      script.addEventListener('load', function (e) { 
+        scriptLoaded(result.success)
+      });
       document.head.appendChild(script);
 
-      script.addEventListener('load', function (e) { 
-        console.log(result);
-        if (result.success) {
-          setTimeout(function(){
-            alertify.delay(4000).closeLogOnClick(true).success(successMsg);
-            setProcessing(false)
-          }, 3000);
-        } else {
-          setTimeout(function(){
-            alertify.delay(4000).closeLogOnClick(true).error(errorMsg);
-            setProcessing(false)
-          }, 5000);
-        }
-        script.parentNode.removeChild(script)
-      });
+      function scriptLoaded(success) {
+          if (success) {
+            setTimeout(function(){
+              alertify.delay(4000).closeLogOnClick(true).success(successMsg);
+              setProcessing(false)
+            }, 3000);
+          } else {
+            setTimeout(function(){
+              alertify.delay(4000).closeLogOnClick(true).error(errorMsg);
+              setProcessing(false)
+            }, 3000);
+          }
+          script.parentNode.removeChild(script)
+      }
     }
   });
+
   
   function setProcessing(value) {
     processingUpdate = value;
@@ -82,6 +88,5 @@ window.onload = function() {
     } else {
       button_element.classList.remove('button-disabled');
     }
-
   }
 }
