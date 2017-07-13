@@ -15,14 +15,14 @@ body {
   align-items: flex-end;
   width: 80vw;
   height: calc(80vw * 0.5006385696);
-  background-image: url("../img/16th.png");
+  background-image: url("./img/16th.png");
   background-size: contain;
   background-repeat: no-repeat;
 }
 
 #pin {
   position: absolute;
-  background-image: url("../img/pin.png");
+  background-image: url("./img/pin.png");
   background-size: contain;
   background-repeat: no-repeat;
   display: hidden;
