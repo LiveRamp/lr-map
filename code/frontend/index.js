@@ -14,11 +14,13 @@ var urlParams;
 window.onload = function() {
   var image_element = document.getElementById('image-container')
   var pin_element = document.getElementById('pin')
-  var button_element = document.getElementById('update')
+  var floor_element = document.getElementById('floor')
+  var update_element = document.getElementById('update')
   var pin_size_ratio = 0.035
   var x;
   var y;
   var processingUpdate = false;
+  var floor = 16;
    
   alertify.parent(image_element);
   alertify.maxLogItems(1);
@@ -40,7 +42,13 @@ window.onload = function() {
     pin_element.setAttribute("style","width:" + pin_size + "px; height:" + pin_size + "px; display:block;top: " + pin_y + "px; left:" + pin_x + "px;");
   }
 
-  document.getElementById('update').addEventListener('click', function (e) {
+  floor_element.addEventListener('click', function (e) {
+    floor = (((floor + 1) - 16) % 2) + 16;
+    floor_element.innerHTML = '<i class="fa fa-refresh fa-lg"></i> ' + floor + 'th floor'
+    image_element.style = 'background-image: url("./img/' + floor + 'th.png");'
+  });
+
+  update_element.addEventListener('click', function (e) {
     if (!processingUpdate) {
       setProcessing(true)
       var name = urlParams.entityname;
@@ -51,7 +59,7 @@ window.onload = function() {
       alertify.closeLogOnClick(true).log(loadingMsg);
 
       var url = 'https://1aw7zewd9c.execute-api.us-east-1.amazonaws.com/prod/addToMapDb?name=' 
-        + name + "&x=" + x + "&y=" + y;
+        + name + "&x=" + x + "&y=" + y + "&floor=" + floor;
 
       var script = document.createElement('script');
       script.setAttribute('src', url);
@@ -84,9 +92,9 @@ window.onload = function() {
   function setProcessing(value) {
     processingUpdate = value;
     if (processingUpdate) {
-      button_element.classList.add('button-disabled');
+      update_element.classList.add('button-disabled');
     } else {
-      button_element.classList.remove('button-disabled');
+      update_element.classList.remove('button-disabled');
     }
   }
 }
