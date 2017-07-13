@@ -1,13 +1,13 @@
 import json
 
-def create_slack_response (location_for, image_url, change_url, location):
+def create_slack_response (location_for, image_url, change_url):
     return json.dumps(
             {
                 "attachments": [
                     {
-                        "title": "Change location in browser",
+                        "title": "[Click here to set the location for " + location_for + "]",
                         "title_link": change_url,
-                        "text": "Location of " + location + " for user " + location_for,
+                        "text": "Location of " + location_for,
                         "color": "#36a64f",
                         "image_url": image_url,
                         "attachment_type": "default",
@@ -31,14 +31,14 @@ def create_slack_response (location_for, image_url, change_url, location):
                 }
             )
 
-def create_slack_response_no_image (location_for, change_url, location):
+def create_slack_response_no_image (location_for, change_url):
     return json.dumps(
             {
                 "attachments": [
                     {
-                        "title": "[Click here to set the location for " + location + "]",
+                        "title": "[Click here to set the location for " + location_for + "]",
                         "title_link": change_url,
-                        "text": "Location of " + location,
+                        "text": "Location of " + location_for,
                         "color": "#36a64f",
                         "attachment_type": "default",
                         "actions": [

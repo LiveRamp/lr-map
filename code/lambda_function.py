@@ -93,7 +93,7 @@ def create_and_upload_image(event, context):
     try:
       location_x, location_y = get_location(escapedLocationName)
     except Exception as e:
-      response = create_slack_response_no_image("Tomasz", change_url, locationName)
+      response = create_slack_response_no_image(locationName, change_url)
       return respond(None, response)
 
     bucket = "maps42"
@@ -110,7 +110,7 @@ def create_and_upload_image(event, context):
 
     image_url =  "https://s3.amazonaws.com/maps42/" + filename
 
-    response = create_slack_response("Tomasz", image_url, change_url, escapedLocationName)
+    response = create_slack_response(locationName, image_url, change_url)
     return respond(None, response)
 
 
