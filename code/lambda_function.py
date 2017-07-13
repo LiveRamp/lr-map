@@ -83,7 +83,7 @@ def create_and_upload_image(event, context):
       display_name = locationName[1] + locationName.split('|')[1][:-1]
     else:
       display_name = locationName
-    change_url = link_to_frontend + "?name=" + display_name + "&data=" + urllib.quote(json.dumps(data))
+    change_url = link_to_frontend + "?name=" + urllib.quote(display_name) + "&data=" + urllib.quote(json.dumps(data))
 
     try:
       db_results = query_db(escapedLocationName)
