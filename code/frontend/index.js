@@ -15,7 +15,7 @@ window.onload = function() {
   var image_element = document.getElementById('image-container')
   var pin_element = document.getElementById('pin')
   var button_element = document.getElementById('update')
-  var pin_size_ratio = 0.027
+  var pin_size_ratio = 0.035
   var x;
   var y;
   var processingUpdate = false;
