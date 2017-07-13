@@ -50,8 +50,8 @@ window.onload = function() {
 
       alertify.closeLogOnClick(true).log(loadingMsg);
 
-      var url = 'https://1aw7zewd9c.execute-api.us-east-1.amazonaws.com/prod/addToMapDb?entityName=' 
-        + name + "&x=" + x + "&y=" + y;
+      var url = 'https://1aw7zewd9c.execute-api.us-east-1.amazonaws.com/prod/addToMapDb?' 
+        + encodeURIComponent(name) + "?" + x + "?" + y + "?";
 
       var script = document.createElement('script');
       script.setAttribute('src', url);
