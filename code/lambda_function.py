@@ -93,13 +93,16 @@ def create_and_upload_image(event, context):
 
     link_to_frontend = "http://mapsstatic.s3-website-us-east-1.amazonaws.com/"
     expandedUserName = "<@" + requesterUserId + "|" + requesterUserName + ">"
-    change_url = link_to_frontend + "?entityname=" + escapedLocationName + "&createdby=" + expandedUserName
+    # change_url = link_to_frontend + "?entityname=" + escapedLocationName + "&data=" + urllib.quote(json.dumps(data))
     data = {
       "expandedUserName" : expandedUserName,
       "locationName": locationName
     }
-    change_url = link_to_frontend + "?entityname=" + escapedLocationName + "&data=" + urllib.quote(json.dumps(data))
-    # change_url = "abc"
+
+    change_url = link_to_frontend + "?name=" + escapedLocationName + "&data=" + urllib.quote(json.dumps(data))
+
+
+    # change_url = link_to_frontend + "?entityname=" + escapedLocationName + "&createdby=" + urllib.quote(json.dumps(data))
 
     try:
       db_results = query_db(escapedLocationName)
@@ -108,6 +111,9 @@ def create_and_upload_image(event, context):
     except Exception as e:
       response = create_slack_response_not_found(locationName, change_url)
       return respond(None, response)
+
+    # data.update(db_results)
+    # change_url = link_to_frontend + "?entityname=" + escapedLocationName + "&data=" + urllib.quote(json.dumps(data))
 
     bucket = "maps42"
     filename = escapedLocationName + str(time.strftime("%H:%M:%S")) + ".gif"
