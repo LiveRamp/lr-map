@@ -19,11 +19,34 @@ def respond(err, res=None):
         },
     }
 
+def add_to_db(entityName, x, y):
+    dynamodb_client.put_item(
+      TableName="Locations",
+      Item={
+        "entityName": {
+          "S": entityName
+        },
+          "x": {
+            "S": str(x)
+          },
+          "y": {
+            "S": str(y)
+          }
+        }
+    )
+
 def lambda_handler(event, context):
     # logger.info("event:" + str(event))
     # logger.info("context:" + str(context))
     text = str(event)
-    reply = 'var result = { success: true, text : "' + text + '" }'
+    text = text.split("?")[1:4]
+    location = text[0]
+    x = text[1]
+    y = text[2]
+
+
+    add_to_db(location, x, y)
+    reply = 'var result = { success: true, text : "' + str(text) + '" }'
     return respond(None, reply)
     # return respond(None, str(event) + str(context))
 
