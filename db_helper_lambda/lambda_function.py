@@ -49,12 +49,6 @@ def add_to_db(entityName, created_by, x, y, floor):
     )
 
 def lambda_handler(event, context):
-    # location = event[u"queryStringParameters"][u"name"]
-    # created_by = event[u"queryStringParameters"][u"createdby"]
-    # x = event[u"queryStringParameters"][u"x"]
-    # y = event[u"queryStringParameters"][u"y"]
-    # floor = event[u"queryStringParameters"][u"floor"]
-
     data = json.loads(urllib.unquote(event[u"queryStringParameters"][u"data"]))
     x = event[u"queryStringParameters"][u"x"]
     y = event[u"queryStringParameters"][u"y"]
@@ -65,7 +59,6 @@ def lambda_handler(event, context):
     add_to_db(location, created_by, x, y, floor)
 
     textreply = str((location, created_by, x, y, floor))
-    # textreply = "yay"
 
     reply = 'var result = { success: true, text:  "' + textreply  +  '" }'
     return respond(None, reply)
