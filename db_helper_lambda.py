@@ -22,7 +22,7 @@ def respond(err, res=None):
         },
     }
 
-def add_to_db(entityName, createdBy, x, y, room):
+def add_to_db(entityName, created_by, x, y, room):
     dynamodb_client.put_item(
       TableName="Locations",
       Item={
@@ -30,7 +30,10 @@ def add_to_db(entityName, createdBy, x, y, room):
           "S": entityName
         },
           "createdby": {
-            "S": str(createdBy)
+            "S": str(created_by)
+          },
+          "createdon": {
+            "S": str(int(round(time.time())))
           },
           "x": {
             "S": str(x)
@@ -46,12 +49,12 @@ def add_to_db(entityName, createdBy, x, y, room):
 
 def lambda_handler(event, context):
     location = event[u"queryStringParameters"][u"name"]
-    createdBy = event[u"queryStringParameters"][u"createdby"]
+    created_by = event[u"queryStringParameters"][u"createdby"]
     x = event[u"queryStringParameters"][u"x"]
     y = event[u"queryStringParameters"][u"y"]
     room = event[u"queryStringParameters"][u"room"]
 
-    add_to_db(location, createdBy, x, y, room)
+    add_to_db(location, created_by, x, y, room)
 
-    reply = 'var result = { success: true, text:  "' + str((location, createdBy, x, y, room))  +  '" }'
+    reply = 'var result = { success: true, text:  "' + str((location, created_by, x, y, room))  +  '" }'
     return respond(None, reply)

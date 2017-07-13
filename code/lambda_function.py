@@ -59,7 +59,7 @@ def respond(err, res=None):
         },
     }
 
-def get_location(locationName):
+def query_db(locationName):
   response = dynamodb_client.get_item(
     TableName=LOCATIONS_TABLE_NAME,
     Key= {
@@ -71,10 +71,13 @@ def get_location(locationName):
   logger.info("Response: " + str(response))
 
   # TODO: react if the conference room is missing
-  location_x = float(response[u"Item"][u"x"][u"S"])
-  location_y = float(response[u"Item"][u"y"][u"S"])
-
-  return (float(response[u"Item"][u"x"][u"S"]), float(response[u"Item"][u"y"][u"S"]))
+  return {
+      "location_x" = float(response[u"Item"][u"x"][u"S"])
+      "location_y" = float(response[u"Item"][u"y"][u"S"])
+      "room" = response[u"Item"][u"room"][u"S"]
+      "created_by" = response[u"Item"][u"createdby"][u"S"]
+      "created_on" = response[u"Item"][u"createdon"][u"S"]
+  }
 
 def create_and_upload_image(event, context):
     # insert_hardcoded_into_db()
@@ -91,7 +94,9 @@ def create_and_upload_image(event, context):
     change_url = link_to_frontend + "?entityname=" + escapedLocationName + "&createdby=" + "TODO"
 
     try:
-      location_x, location_y = get_location(escapedLocationName)
+      db_results = query_db(escapedLocationName)
+        for key, val in db_results.items():
+            exec(key + '=val')
     except Exception as e:
       response = create_slack_response_not_found(locationName, change_url)
       return respond(None, response)
@@ -110,7 +115,7 @@ def create_and_upload_image(event, context):
 
     image_url =  "https://s3.amazonaws.com/maps42/" + filename
 
-    response = create_slack_response(locationName, image_url, change_url)
+    response = create_slack_response(locationName, image_url, change_url, created_by, created_on)
     return respond(None, response)
 
 

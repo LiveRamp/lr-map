@@ -1,6 +1,6 @@
 import json
 
-def create_slack_response (location_for, image_url, change_url):
+def create_slack_response (location_for, image_url, change_url, created_by, created_on):
     return json.dumps(
             {
                 "attachments": [
@@ -9,6 +9,8 @@ def create_slack_response (location_for, image_url, change_url):
                         "color": "#36a64f",
                         "image_url": image_url,
                         "attachment_type": "default",
+			"footer": "Location added by " + created_by + ".",
+                        "ts": created_on,
                         "actions": [
                             {
                                 "name": "send",
