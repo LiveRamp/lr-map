@@ -9,8 +9,7 @@ def create_slack_response (location_for, image_url, change_url, created_by, crea
                         "color": "#36a64f",
                         "image_url": image_url,
                         "attachment_type": "default",
-			"footer": "Location added by " + created_by + ".",
-                        "ts": created_on,
+			"footer": "Location added by <@fgauge><!date^" + created_on + "^ on {date} at {time}.|.>",
                         "actions": [
                             {
                                 "name": "send",
