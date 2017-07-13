@@ -55,17 +55,17 @@ def lambda_handler(event, context):
     # y = event[u"queryStringParameters"][u"y"]
     # floor = event[u"queryStringParameters"][u"floor"]
 
-    # data = json.loads(urllib.unquote(event[u"queryStringParameters"][u"data"]))
-    # x = event[u"queryStringParameters"][u"x"]
-    # y = event[u"queryStringParameters"][u"y"]
-    # floor = event[u"queryStringParameters"][u"floor"]
-    # location = data["locationName"]
-    # created_by = data["expandedUserName"]
+    data = json.loads(urllib.unquote(event[u"queryStringParameters"][u"data"]))
+    x = event[u"queryStringParameters"][u"x"]
+    y = event[u"queryStringParameters"][u"y"]
+    floor = event[u"queryStringParameters"][u"floor"]
+    location = data["locationName"]
+    created_by = data["expandedUserName"]
 
-    # add_to_db(location, created_by, x, y, floor)
+    add_to_db(location, created_by, x, y, floor)
 
-    # textreply = str((location, created_by, x, y, floor))
-    textreply = "yay"
+    textreply = str((location, created_by, x, y, floor))
+    # textreply = "yay"
 
     reply = 'var result = { success: true, text:  "' + textreply  +  '" }'
     return respond(None, reply)
