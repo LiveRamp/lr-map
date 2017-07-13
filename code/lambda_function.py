@@ -32,24 +32,6 @@ LOCATIONS_TABLE_NAME = "Locations"
 dynamodb_client = boto3.client('dynamodb')
 s3_client = boto3.client('s3')
 
-def insert_hardcoded_into_db():
-  for location in locations:
-    (x, y) = locations[location]
-    dynamodb_client.put_item(
-      TableName=LOCATIONS_TABLE_NAME,
-      Item={
-        "entityName": {
-          "S": location
-        },
-          "x": {
-            "S": str(x)
-          },
-          "y": {
-            "S": str(y)
-          }
-        }
-    )
-
 def respond(err, res=None):
     return {
         'statusCode': '400' if err else '200',
@@ -80,8 +62,6 @@ def query_db(locationName):
   }
 
 def create_and_upload_image(event, context):
-    # insert_hardcoded_into_db()
-
     try:
         locationName = event[u'queryStringParameters'][u'text']
         requesterUserName = event[u'queryStringParameters'][u'user_name']
@@ -93,16 +73,17 @@ def create_and_upload_image(event, context):
 
     link_to_frontend = "http://mapsstatic.s3-website-us-east-1.amazonaws.com/"
     expandedUserName = "<@" + requesterUserId + "|" + requesterUserName + ">"
-    # change_url = link_to_frontend + "?entityname=" + escapedLocationName + "&data=" + urllib.quote(json.dumps(data))
+
     data = {
       "expandedUserName" : expandedUserName,
       "locationName": locationName
     }
 
-    change_url = link_to_frontend + "?name=" + escapedLocationName + "&data=" + urllib.quote(json.dumps(data))
-
-
-    # change_url = link_to_frontend + "?entityname=" + escapedLocationName + "&createdby=" + urllib.quote(json.dumps(data))
+    if locationName.startswith("<"):
+      display_name = locationName[1] + locationName.split('|')[1][:-1]
+    else:
+      display_name = locationName
+    change_url = link_to_frontend + "?name=" + display_name + "&data=" + urllib.quote(json.dumps(data))
 
     try:
       db_results = query_db(escapedLocationName)
@@ -111,9 +92,6 @@ def create_and_upload_image(event, context):
     except Exception as e:
       response = create_slack_response_not_found(locationName, change_url)
       return respond(None, response)
-
-    # data.update(db_results)
-    # change_url = link_to_frontend + "?entityname=" + escapedLocationName + "&data=" + urllib.quote(json.dumps(data))
 
     bucket = "maps42"
     filename = escapedLocationName + str(time.strftime("%H:%M:%S")) + ".gif"
