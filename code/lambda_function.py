@@ -10,7 +10,7 @@ import os
 from PIL import Image, ImageDraw
 import time
 
-from slack import create_slack_response, create_failed_slack_response
+from slack import create_slack_response, create_failed_slack_response, create_slack_response_no_image
 from image import create_location_image
 
 from botocore.exceptions import ClientError
@@ -30,6 +30,7 @@ locations = {
 LOCATIONS_TABLE_NAME = "Locations"
 
 dynamodb_client = boto3.client('dynamodb')
+s3_client = boto3.client('s3')
 
 def insert_hardcoded_into_db():
   for location in locations:
@@ -76,7 +77,7 @@ def get_location(locationName):
   return (float(response[u"Item"][u"x"][u"S"]), float(response[u"Item"][u"y"][u"S"]))
 
 def create_and_upload_image(event, context):
-    insert_hardcoded_into_db()
+    # insert_hardcoded_into_db()
 
     try:
         locationName = event[u'queryStringParameters'][u'text']
@@ -84,15 +85,19 @@ def create_and_upload_image(event, context):
         return respond(None, create_failed_slack_response("Are you sure this message was sent from Slack?"))
 
     # TODO: react if the conference room is missing
-    locationName = urllib.quote(locationName)
-    location_x, location_y = get_location(locationName)
+    escapedLocationName = urllib.quote(locationName)
 
+    link_to_frontend = "http://mapsstatic.s3-website-us-east-1.amazonaws.com/"
+    change_url = link_to_frontend + "?entityname=" + escapedLocationName
 
-    s3 = boto3.resource('s3')
-    s3_client = boto3.client('s3')
+    try:
+      location_x, location_y = get_location(escapedLocationName)
+    except Exception as e:
+      response = create_slack_response_no_image("Tomasz", change_url, locationName)
+      return respond(None, response)
 
     bucket = "maps42"
-    filename = locationName + str(time.strftime("%H:%M")) + ".gif"
+    filename = escapedLocationName + str(time.strftime("%H:%M:%S")) + ".gif"
     filepath = "/tmp/" + filename
 
     try:
@@ -104,10 +109,8 @@ def create_and_upload_image(event, context):
       s3_client.upload_file(filepath, bucket, filename)
 
     image_url =  "https://s3.amazonaws.com/maps42/" + filename
-    link_to_frontend = "http://mapsstatic.s3-website-us-east-1.amazonaws.com/"
-    change_url = link_to_frontend + "?entityname=" + locationName
 
-    response = create_slack_response("Tomasz", image_url, change_url, locationName)
+    response = create_slack_response("Tomasz", image_url, change_url, escapedLocationName)
     return respond(None, response)
 
 
