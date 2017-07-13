@@ -72,11 +72,11 @@ def query_db(locationName):
 
   # TODO: react if the conference room is missing
   return {
-      "location_x" = float(response[u"Item"][u"x"][u"S"])
-      "location_y" = float(response[u"Item"][u"y"][u"S"])
-      "room" = response[u"Item"][u"room"][u"S"]
-      "created_by" = response[u"Item"][u"createdby"][u"S"]
-      "created_on" = response[u"Item"][u"createdon"][u"S"]
+      "location_x": float(response[u"Item"][u"x"][u"S"]),
+      "location_y": float(response[u"Item"][u"y"][u"S"]),
+      "floor": response[u"Item"][u"floor"][u"S"],
+      "created_by": response[u"Item"][u"createdby"][u"S"],
+      "created_on": response[u"Item"][u"createdon"][u"S"]
   }
 
 def create_and_upload_image(event, context):
@@ -95,8 +95,8 @@ def create_and_upload_image(event, context):
 
     try:
       db_results = query_db(escapedLocationName)
-        for key, val in db_results.items():
-            exec(key + '=val')
+      for key, val in db_results.items():
+        exec(key + '=val')
     except Exception as e:
       response = create_slack_response_not_found(locationName, change_url)
       return respond(None, response)

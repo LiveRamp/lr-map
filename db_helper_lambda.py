@@ -5,6 +5,7 @@ import os
 
 import urllib
 import ast
+import time
 
 LOCATIONS_TABLE_NAME = "Locations"
 
@@ -22,7 +23,7 @@ def respond(err, res=None):
         },
     }
 
-def add_to_db(entityName, created_by, x, y, room):
+def add_to_db(entityName, created_by, x, y, floor):
     dynamodb_client.put_item(
       TableName="Locations",
       Item={
@@ -41,8 +42,8 @@ def add_to_db(entityName, created_by, x, y, room):
           "y": {
             "S": str(y)
           },
-          "room": {
-            "S": str(room)
+          "floor": {
+            "S": str(floor)
           }
         }
     )
@@ -52,9 +53,9 @@ def lambda_handler(event, context):
     created_by = event[u"queryStringParameters"][u"createdby"]
     x = event[u"queryStringParameters"][u"x"]
     y = event[u"queryStringParameters"][u"y"]
-    room = event[u"queryStringParameters"][u"room"]
+    floor = event[u"queryStringParameters"][u"floor"]
 
-    add_to_db(location, created_by, x, y, room)
+    add_to_db(location, created_by, x, y, floor)
 
-    reply = 'var result = { success: true, text:  "' + str((location, created_by, x, y, room))  +  '" }'
+    reply = 'var result = { success: true, text:  "' + str((location, created_by, x, y, floor))  +  '" }'
     return respond(None, reply)
