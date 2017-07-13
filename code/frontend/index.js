@@ -49,22 +49,29 @@ window.onload = function() {
       var errorMsg = '<i class="fa fa-times fa-fw"></i> There was an error while updating location for "' + name + '"'
 
       alertify.closeLogOnClick(true).log(loadingMsg);
-      axios.post('https://1aw7zewd9c.execute-api.us-east-1.amazonaws.com/prod/addToMapDb', {
-        entityName: name,
-        x: x,
-        y: y
-      }).then(function (response) {
+
+      var url = 'https://1aw7zewd9c.execute-api.us-east-1.amazonaws.com/prod/addToMapDb?entityName=' 
+        + name + "&x=" + x + "&y=" + y;
+
+      var script = document.createElement('script');
+      script.setAttribute('src', url);
+      document.head.appendChild(script);
+
+      script.addEventListener('load', function (e) { 
+        console.log(result);
+        if (result.success) {
           setTimeout(function(){
             alertify.delay(4000).closeLogOnClick(true).success(successMsg);
             setProcessing(false)
           }, 3000);
-        })
-        .catch(function (error) {
+        } else {
           setTimeout(function(){
             alertify.delay(4000).closeLogOnClick(true).error(errorMsg);
             setProcessing(false)
           }, 5000);
-        })
+        }
+        script.parentNode.removeChild(script)
+      });
     }
   });
   
