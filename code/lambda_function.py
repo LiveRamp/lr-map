@@ -88,7 +88,7 @@ def create_and_upload_image(event, context):
     escapedLocationName = urllib.quote(locationName)
 
     link_to_frontend = "http://mapsstatic.s3-website-us-east-1.amazonaws.com/"
-    change_url = link_to_frontend + "?entityname=" + escapedLocationName
+    change_url = link_to_frontend + "?entityname=" + escapedLocationName + "&createdby=" + "TODO"
 
     try:
       location_x, location_y = get_location(escapedLocationName)
