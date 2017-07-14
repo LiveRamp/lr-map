@@ -68,6 +68,7 @@ def create_and_upload_image(responseText):
         locationName = responseText[u"text"][0]
         requesterUserName = responseText[u"user_name"][0]
         requesterUserId = responseText[u"user_id"][0]
+        in_channel = responseText[u"channel_id"][0]
     except KeyError:
         return respond(None, create_failed_slack_response("Are you sure this message was sent from Slack?"))
 
@@ -117,25 +118,23 @@ def create_and_upload_image(responseText):
 def interactive_action (responseText):
     url = 'https://slack.com/api/chat.postMessage'
     #response = urllib2.urlopen(url, data=create_send_slack_message(TODO)).read()
-    action = "cancel" #<todo tomasz>
-    return respond(None, create_failed_slack_response("{}"))
+    # action = "cancel" #<todo tomasz>
+
+    # payload = responseText[u"]
+
+    return respond(None, '{ "delete_original" : "true" }')
 
 
 def lambda_handler(event, context):
     logger.info("Looks like autoamtic deployment works. event: " + str(event))
     data = event[u"body"]
     responseText = parse_qs(data)
+    logger.info("responseText: " + str(responseText))
 
-    # request_type = "interactive_action" #<todo tomasz>
-    # request_type = "create_and_upload_image" #<todo tomasz>
-
-    if "payload" in str(event):
+    if "cancel" in str(event) or "Send" in str(event):
       request_type = "interactive_action"
     else:
       request_type = "create_and_upload_image"
-
-    # request_type = "create_and_upload_image"
-
 
     request_type_to_action = {
             "create_and_upload_image": create_and_upload_image,
