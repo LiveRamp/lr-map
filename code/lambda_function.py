@@ -68,7 +68,8 @@ def create_and_upload_image(responseText):
         locationName = responseText[u"text"][0]
         requesterUserName = responseText[u"user_name"][0]
         requesterUserId = responseText[u"user_id"][0]
-        in_channel = responseText[u"channel_id"][0]
+        # in_channel = responseText[u"channel_id"][0]
+        in_channel = "abc"
     except KeyError:
         return respond(None, create_failed_slack_response("Are you sure this message was sent from Slack?"))
 
