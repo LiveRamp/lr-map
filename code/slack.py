@@ -7,7 +7,7 @@ def create_send_slack_message(in_channel, location_for, change_url, image_url, c
             "token": 'xoxp-113070057776-211135045057-212852625397-a02dc2cae27533deca6f9583815fe60f',
             "channel": in_channel,
             "link_names": "true",
-            "username": "@fgauge via /map",
+            "as_user": "true",
             "attachments": json.dumps([
                 {
                     "title": "Location of " + location_for + ", click <" + change_url + "|here> to update.",
