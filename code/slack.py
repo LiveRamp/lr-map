@@ -27,7 +27,7 @@ def create_slack_response (in_channel, location_for, image_url, change_url, crea
 			"title": "Location of " + location_for + ", click <" + change_url + "|here> to update.",
                         "color": "#36a64f",
                         "image_url": image_url,
-                        "fallback": "Looks like your slack client is to old.",
+                        "fallback": "Someone sent you a location via /map.",
                         "callback_id": "map",
                         "attachment_type": "default",
 			"footer": "Location added by " + created_by + " <!date^" + created_on + "^ on {date} at {time}.|.>",
