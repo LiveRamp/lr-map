@@ -112,7 +112,7 @@ def create_and_upload_image(responseText):
 
     image_url =  "https://s3.amazonaws.com/" + bucket + "/" + filename
 
-    response = create_slack_response(locationName, image_url, change_url, created_by, created_on)
+    response = create_slack_response(in_channel, locationName, image_url, change_url, created_by, created_on)
     return respond(None, response)
 
 def interactive_action (responseText):
@@ -123,6 +123,7 @@ def interactive_action (responseText):
     # payload = responseText[u"]
 
     return respond(None, '{ "delete_original" : "true" }')
+    # COMMENT THIS IN TO POST TO CHANNEL! response = urllib2.urlopen(url, data=create_send_slack_message(TODO)).read()
 
 
 def lambda_handler(event, context):
