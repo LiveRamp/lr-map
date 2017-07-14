@@ -33,14 +33,14 @@ def create_slack_response (in_channel, location_for, image_url, change_url, crea
 			"footer": "Location added by " + created_by + " <!date^" + created_on + "^ on {date} at {time}.|.>",
                         "actions": [
                             {
-                                "name": "send",
+                                "name": "send8037123",
                                 "text": "Send",
                                 "type": "button",
                                 "value": create_send_slack_message(in_channel, location_for, change_url, image_url, created_by, created_on),
                                 "style": "primary"
                                 },
                             {
-                                "name": "cancel",
+                                "name": "cancel8037123",
                                 "text": "Cancel",
                                 "type": "button",
                                 "value": "cancel"

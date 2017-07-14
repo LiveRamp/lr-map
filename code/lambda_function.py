@@ -148,10 +148,12 @@ def lambda_handler(event, context):
     logger.info("responseText: " + str(responseText))
 
     if "action_ts" in str(event):
-      if "cancel" in str(event):
+      if "send8037123" in str(event):
+        action = "send"
+      elif "cancel8037123" in str(event):
         action = "cancel"
       else:
-        action = "send"
+        logger.error("Unknown action.")
       request_type = "interactive_action"
     else:
       action = "fetch_image"
