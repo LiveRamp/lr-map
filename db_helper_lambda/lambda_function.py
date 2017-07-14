@@ -50,7 +50,7 @@ def add_to_db(entityName, created_by, x, y, floor):
     )
 
 def lambda_handler(event, context):
-    data = json.loads(base64.urlsafe_b64decode((event[u"queryStringParameters"][u"data"]))
+    data = json.loads(base64.urlsafe_b64decode((event[u"queryStringParameters"][u"data"])))
     x = event[u"queryStringParameters"][u"x"]
     y = event[u"queryStringParameters"][u"y"]
     floor = event[u"queryStringParameters"][u"floor"]

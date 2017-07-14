@@ -84,17 +84,17 @@ def create_and_upload_image(responseText, _):
 
     escapedLocationName = urllib.quote(locationName)
 
+    if locationName.startswith("<"):
+      display_name = locationName[1] + locationName.split('|')[1][:-1]
+    else:
+      display_name = locationName
+
     expandedUserName = "<@" + requesterUserId + "|" + requesterUserName + ">"
     data = {
         "name": display_name,
         "expandedUserName" : expandedUserName,
         "locationName": locationName
     }
-
-    if locationName.startswith("<"):
-      display_name = locationName[1] + locationName.split('|')[1][:-1]
-    else:
-      display_name = locationName
     change_url = link_to_frontend + "?data=" + base64.urlsafe_b64encode(json.dumps(data))
 
     try:
