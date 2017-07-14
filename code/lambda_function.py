@@ -17,6 +17,7 @@ from botocore.exceptions import ClientError
 
 import urllib
 import hashlib
+from urlparse import urlparse, parse_qs
 
 
 logger = logging.getLogger()
@@ -63,10 +64,12 @@ def query_db(locationName):
   }
 
 def create_and_upload_image(event, context):
+    data = event[u"body"]
+    responseText = parse_qs(data)
     try:
-        locationName = event[u'queryStringParameters'][u'text']
-        requesterUserName = event[u'queryStringParameters'][u'user_name']
-        requesterUserId = event[u'queryStringParameters'][u'user_id']
+        locationName = responseText[u"text"][0]
+        requesterUserName = responseText[u"user_name"][0]
+        requesterUserId = responseText[u"user_id"][0]
     except KeyError:
         return respond(None, create_failed_slack_response("Are you sure this message was sent from Slack?"))
 

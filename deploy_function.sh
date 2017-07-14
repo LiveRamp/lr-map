@@ -1,6 +1,6 @@
 AWS_LAMBDA_MAIN_FUNCTION_NAME="functionv5"
 AWS_LAMBDA_ADD_TO_DB_FUNCTION_NAME="addToMapDb"
-S3_BUCKET_NAME="map42"
+S3_STATIC_CONTENT_BUCKET_NAME="mapsstatic"
 
 DIRECTORY_WITH_CONTENT="./code" 
 DIRECTORY_WITH_DB_HELPER="./db_helper_lambda"
@@ -21,6 +21,14 @@ ditto -c -k --sequesterRsrc $DIRECTORY_WITH_DB_HELPER $DB_HELPER_ARCHIVE_FILENAM
 
 aws lambda update-function-code --function-name $AWS_LAMBDA_MAIN_FUNCTION_NAME --zip-file fileb://$MAIN_ARCHIVE_FILENAME
 aws lambda update-function-code --function-name $AWS_LAMBDA_ADD_TO_DB_FUNCTION_NAME --zip-file fileb://$DB_HELPER_ARCHIVE_FILENAME
+
+
+aws s3 cp ./code/frontend/index.html s3://$S3_STATIC_CONTENT_BUCKET_NAME/index.html
+aws s3 cp ./code/frontend/index.js s3://$S3_STATIC_CONTENT_BUCKET_NAME/index.js
+aws s3 cp ./code/frontend/style.css s3://$S3_STATIC_CONTENT_BUCKET_NAME/style.css
+aws s3 cp ./code/frontend/img/16th.png s3://$S3_STATIC_CONTENT_BUCKET_NAME/img/16th.png
+aws s3 cp ./code/frontend/img/17th.png s3://$S3_STATIC_CONTENT_BUCKET_NAME/img/17th.png
+aws s3 cp ./code/frontend/img/pin.png s3://$S3_STATIC_CONTENT_BUCKET_NAME/img/pin.png
 
 rm -r $BUILD_DIR
 rm $MAIN_ARCHIVE_FILENAME
