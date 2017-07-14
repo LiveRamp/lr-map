@@ -1,7 +1,7 @@
 import json
 import urllib
 
-def create_slack_response (in_channel, location_for, image_url, change_url, created_by, created_on, send_value):
+def create_slack_response (in_channel, location_for, image_url, change_url, created_by, created_on):
     return json.dumps(
             {
                 "attachments": [
