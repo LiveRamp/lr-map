@@ -49,6 +49,11 @@ window.onload = function() {
   });
 
   update_element.addEventListener('click', function (e) {
+    if (!x) {
+      var errorMsg = "Please set a location first."
+      alertify.delay(4000).closeLogOnClick(true).success(errorMsg);
+      return;
+    }
     if (!processingUpdate) {
       setProcessing(true)
       var name = urlParams.name
