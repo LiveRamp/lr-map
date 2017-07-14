@@ -3,11 +3,12 @@ import urllib
 import base64
 
 def create_send_slack_message(in_channel, location_for, change_url, image_url, created_by, created_on):
-    return base64.b32encode(urllib.urlencode({
-            "token": 'xoxp-113070057776-211135045057-212852625397-a02dc2cae27533deca6f9583815fe60f',
-            "channel": in_channel,
-            "link_names": "true",
-            "as_user": "true",
+    return base64.b32encode(json.dumps({
+            #"token": 'xoxp-113070057776-211135045057-212852625397-a02dc2cae27533deca6f9583815fe60f',
+            #"channel": in_channel,
+            #"link_names": "true",
+            #"as_user": "true",
+            "response_type": "in_channel",
             "attachments": json.dumps([
                 {
                     "title": "Location of " + location_for + ", click <" + change_url + "|here> to update.",

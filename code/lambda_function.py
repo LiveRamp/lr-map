@@ -3,13 +3,12 @@ import json
 import logging
 import os
 
-from base64 import b64decode
+import base64
 import os
 
 from PIL import Image, ImageDraw
 import time
 import urllib2
-import base64
 
 from slack import create_slack_response, create_failed_slack_response, create_slack_response_not_found, create_send_slack_message
 from image import create_location_image
@@ -127,8 +126,13 @@ def interactive_action (responseText, action):
         value = jsonDict[u"actions"][0]["value"]
         logger.info("value:")
         value = base64.b32decode(value)
+        value = value.replace("\\\"", "\"")
+        # value = json.loads(value)
+        # value["attachments"] = json.loads(value["attachments"])
         logger.info(value)
-        response = urllib2.urlopen(url, data=value)
+        #response = urllib2.urlopen(url, data=value)
+        return respond(None, json.dumps(value))
+
 
     return respond(None, '{ "delete_original" : "true" }')
 
