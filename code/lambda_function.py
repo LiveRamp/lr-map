@@ -9,6 +9,7 @@ import os
 from PIL import Image, ImageDraw
 import time
 import urllib2
+import base64
 
 from slack import create_slack_response, create_failed_slack_response, create_slack_response_not_found, create_send_slack_message
 from image import create_location_image
@@ -113,13 +114,21 @@ def create_and_upload_image(responseText, _):
     image_url =  "https://s3.amazonaws.com/" + bucket + "/" + filename
 
     response = create_slack_response(in_channel, locationName, image_url, change_url, created_by, created_on)
+    logger.info(response)
     return respond(None, response)
 
 def interactive_action (responseText, action):
     url = 'https://slack.com/api/chat.postMessage'
+    text = "text"
     if action == "send":
-        request_data = "value"
-        response = urllib2.urlopen(url, data=request_data)
+        payload = responseText[u"payload"][0]
+
+        jsonDict = json.loads(payload)
+        value = jsonDict[u"actions"][0]["value"]
+        logger.info("value:")
+        value = base64.b32decode(value)
+        logger.info(value)
+        response = urllib2.urlopen(url, data=value)
 
     return respond(None, '{ "delete_original" : "true" }')
 
