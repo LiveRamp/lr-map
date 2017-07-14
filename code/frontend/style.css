@@ -16,7 +16,7 @@ body {
   width: 80vw;
   height: calc(80vw * 0.5006385696);
   background-image: url("./img/16th.png");
-  background-size: contain;
+  background-size: cover;
   background-repeat: no-repeat;
 }
 
