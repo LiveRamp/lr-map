@@ -107,7 +107,7 @@ def create_and_upload_image(responseText, _):
       logger.info("The file already exists, so a new one will not be created.")
     except ClientError as e:
       logger.info("Creating the file because of the error: " + str(e))
-      create_location_image(location_x, location_y, filepath)
+      create_location_image(location_x, location_y, filepath, floor)
       s3_client.upload_file(filepath, bucket, filename)
 
     image_url =  "https://s3.amazonaws.com/" + bucket + "/" + filename
