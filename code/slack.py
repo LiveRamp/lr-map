@@ -4,12 +4,12 @@ import urllib
 def create_slack_response (location_for, image_url, change_url, created_by, created_on):
     return json.dumps(
             {
-                "callback_id": "map",
                 "attachments": [
                     {
 			"title": "Location of " + location_for + ", click <" + change_url + "|here> to update.",
                         "color": "#36a64f",
                         "image_url": image_url,
+                        "callback_id": "map",
                         "attachment_type": "default",
 			"footer": "Location added by " + created_by + " <!date^" + created_on + "^ on {date} at {time}.|.>",
                         "actions": [
