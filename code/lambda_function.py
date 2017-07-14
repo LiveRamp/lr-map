@@ -8,8 +8,9 @@ import os
 
 from PIL import Image, ImageDraw
 import time
+import urllib2
 
-from slack import create_slack_response, create_failed_slack_response, create_slack_response_not_found
+from slack import create_slack_response, create_failed_slack_response, create_slack_response_not_found, create_send_slack_message
 from image import create_location_image
 
 from botocore.exceptions import ClientError
@@ -114,6 +115,8 @@ def create_and_upload_image(responseText):
     return respond(None, response)
 
 def interactive_action (responseText):
+    url = 'https://slack.com/api/chat.postMessage'
+    #response = urllib2.urlopen(url, data=create_send_slack_message(TODO)).read()
     action = "cancel" #<todo tomasz>
     return respond(None, create_failed_slack_response("{}"))
 
