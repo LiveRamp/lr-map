@@ -86,7 +86,6 @@ def create_and_upload_image(responseText, _):
     escapedLocationName = urllib.quote(locationName)
 
     expandedUserName = "<@" + requesterUserId + "|" + requesterUserName + ">"
-
     data = {
       "expandedUserName" : expandedUserName,
       "locationName": locationName
@@ -96,7 +95,9 @@ def create_and_upload_image(responseText, _):
       display_name = locationName[1] + locationName.split('|')[1][:-1]
     else:
       display_name = locationName
-    change_url = link_to_frontend + "?name=" + urllib.quote(display_name) + "&data=" + urllib.quote(json.dumps(data))
+    change_url = link_to_frontend 
+        + "?name=" + urllib.quote(display_name) 
+        + "&data=" + base64.urlsafe_b64encode(json.dumps(data))
 
     try:
       db_results = query_db(locationName)
@@ -134,7 +135,7 @@ def interactive_action (responseText, action):
         jsonDict = json.loads(payload)
         value = jsonDict[u"actions"][0]["value"]
         logger.info("value:")
-        value = base64.b32decode(value)
+        value = base64.urlsafe_b64decode(value)
         # value["attachments"]["image_url"] += "abcdef"
         logger.info("before replacement: " + value)
         # value = value.replace("\\\"", "\"")
