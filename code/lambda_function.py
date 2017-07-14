@@ -123,7 +123,7 @@ def lambda_handler(event):
     data = event[u"body"]
     responseText = parse_qs(data)
 
-    request_type = "interactive_action" #<todo tomasz>
+    request_type = "create_and_upload_image" #<todo tomasz>
 
     request_type_to_action = {
             "create_and_upload_image": create_and_upload_image,
