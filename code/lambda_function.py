@@ -126,6 +126,7 @@ def interactive_action (responseText, action):
         value = jsonDict[u"actions"][0]["value"]
         logger.info("value:")
         value = base64.b32decode(value)
+        # value["attachments"]["image_url"] += "abcdef"
         logger.info("before replacement: " + value)
         # value = value.replace("\\\"", "\"")
         # logger.info("after replacement: " + value)

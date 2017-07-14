@@ -8,7 +8,7 @@ def create_send_slack_message(in_channel, location_for, change_url, image_url, c
             #"channel": in_channel,
             #"link_names": "true",
             #"as_user": "true",
-            "response_type": "in_channel",
+            #"response_type": "in_channel",
             "attachments": [{
                     "title": "Location of " + location_for + ", click <" + change_url + "|here> to update.",
                     "color": "#36a64f",
@@ -22,6 +22,7 @@ def create_send_slack_message(in_channel, location_for, change_url, image_url, c
 def create_slack_response (in_channel, location_for, image_url, change_url, created_by, created_on):
     return json.dumps(
             {
+                "response_type": "in_channel",
                 "attachments": [
                     {
 			"title": "Location of " + location_for + ", click <" + change_url + "|here> to update.",
