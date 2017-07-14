@@ -4,7 +4,6 @@ import logging
 import os
 
 from base64 import b64decode
-from urlparse import parse_qs
 import os
 
 from PIL import Image, ImageDraw
