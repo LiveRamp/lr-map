@@ -133,9 +133,8 @@ def interactive_action (responseText, action):
         # value = json.loads(value)
         # value["attachments"] = json.loads(value["attachments"])
         logger.info(value)
-        #response = urllib2.urlopen(url, data=value)
-        return respond(None, value)
-
+        response = urllib2.urlopen(url, data=value)
+        #return respond(None, value)
 
     return respond(None, '{ "delete_original" : "true" }')
 
