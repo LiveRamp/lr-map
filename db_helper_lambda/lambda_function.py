@@ -61,5 +61,5 @@ def lambda_handler(event, context):
 
     textreply = str((location, created_by, x, y, floor))
 
-    reply = 'var result = { success: true, text:  "' + textreply  +  '" }'
+    reply = 'var result = { success: true }'
     return respond(None, reply)
