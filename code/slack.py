@@ -36,8 +36,7 @@ def create_slack_response (in_channel, location_for, image_url, change_url, crea
                                 "name": "send",
                                 "text": "Send",
                                 "type": "button",
-                                # "value": create_send_slack_message(in_channel, location_for, change_url, image_url, created_by, created_on),
-                                "value" : "send",
+                                "value": create_send_slack_message(in_channel, location_for, change_url, image_url, created_by, created_on),
                                 "style": "primary"
                                 },
                             {
