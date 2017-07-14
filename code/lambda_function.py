@@ -87,8 +87,9 @@ def create_and_upload_image(responseText, _):
 
     expandedUserName = "<@" + requesterUserId + "|" + requesterUserName + ">"
     data = {
-      "expandedUserName" : expandedUserName,
-      "locationName": locationName
+        "name": display_name,
+        "expandedUserName" : expandedUserName,
+        "locationName": locationName
     }
 
     if locationName.startswith("<"):
@@ -96,8 +97,7 @@ def create_and_upload_image(responseText, _):
     else:
       display_name = locationName
     change_url = link_to_frontend 
-        + "?name=" + urllib.quote(display_name) 
-        + "&data=" + base64.urlsafe_b64encode(json.dumps(data))
+        + "?data=" + base64.urlsafe_b64encode(json.dumps(data))
 
     try:
       db_results = query_db(locationName)

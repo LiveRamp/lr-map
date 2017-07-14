@@ -1,4 +1,5 @@
-var urlParams;
+var data;
+var dataEncoded;
 (window.onpopstate = function () {
     var match,
         pl     = /\+/g,  // Regex for replacing addition symbol with a space
@@ -6,10 +7,18 @@ var urlParams;
         decode = function (s) { return decodeURIComponent(s.replace(pl, " ")); },
         query  = window.location.search.substring(1);
 
-    urlParams = {};
+    var urlParams = {};
     while (match = search.exec(query))
        urlParams[decode(match[1])] = decode(match[2]);
+    data = decodeData(urlParams.data)
+    dataEncoded = urlParams.data
 })();
+
+function decodeData(data) {
+    data = data.replace("-", "+").replace("_", "/")
+    data = JSON.parse(window.atob(data))
+  return data
+}
 
 window.onload = function() {
   var image_element = document.getElementById('image-container')
@@ -56,15 +65,14 @@ window.onload = function() {
     }
     if (!processingUpdate) {
       setProcessing(true)
-      var name = urlParams.name
-      var loadingMsg = '<i class="fa fa-circle-o-notch fa-spin fa-fw"></i> Updating location for "' + name + '"'
-      var successMsg = '<i class="fa fa-check fa-fw"></i> Successfully updated location for "' + name + '"'
-      var errorMsg = '<i class="fa fa-times fa-fw"></i> There was an error while updating location for "' + name + '"'
+      var loadingMsg = '<i class="fa fa-circle-o-notch fa-spin fa-fw"></i> Updating location for "' + data.name + '"'
+      var successMsg = '<i class="fa fa-check fa-fw"></i> Successfully updated location for "' + data.name + '"'
+      var errorMsg = '<i class="fa fa-times fa-fw"></i> There was an error while updating location for "' + data.name + '"'
 
       alertify.closeLogOnClick(true).log(loadingMsg);
 
       var url = 'https://hbe9t0i30j.execute-api.us-east-1.amazonaws.com/prod/***REMOVED***-db-helper?data=' 
-        + encodeURIComponent(urlParams.data) + "&x=" + x + "&y=" + y + "&floor=" + floor;
+        + dataEncoded + "&x=" + x + "&y=" + y + "&floor=" + floor;
 
       var script = document.createElement('script');
       script.setAttribute('src', url);
