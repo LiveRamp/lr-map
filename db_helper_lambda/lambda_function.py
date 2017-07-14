@@ -50,16 +50,27 @@ def add_to_db(entityName, created_by, x, y, floor):
     )
 
 def lambda_handler(event, context):
-    data = json.loads(base64.urlsafe_b64decode(event[u"queryStringParameters"][u"data"]))
-    x = event[u"queryStringParameters"][u"x"]
-    y = event[u"queryStringParameters"][u"y"]
-    floor = event[u"queryStringParameters"][u"floor"]
-    location = data["locationName"]
-    created_by = data["expandedUserName"]
+    eventData = event[u"queryStringParameters"][u"data"]
+    logger.info("eventData:")
+    logger.info(eventData)
 
-    add_to_db(location, created_by, x, y, floor)
+    decoded = base64.urlsafe_b64decode(eventData)
+    logger.info("decoded:")
+    logger.info(decoded)
 
-    textreply = str((location, created_by, x, y, floor))
+    data = json.loads(decoded)
+    logger.info("data:")
+    logger.info(data)
+    
+    # x = event[u"queryStringParameters"][u"x"]
+    # y = event[u"queryStringParameters"][u"y"]
+    # floor = event[u"queryStringParameters"][u"floor"]
+    # location = data["locationName"]
+    # created_by = data["expandedUserName"]
+
+    # add_to_db(location, created_by, x, y, floor)
+
+    # textreply = str((location, created_by, x, y, floor))
 
     reply = 'var result = { success: true }'
     return respond(None, reply)
