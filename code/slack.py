@@ -1,6 +1,24 @@
 import json
 import urllib
 
+def create_send_slack_message(in_channel, location_for, change_url, image_url, created_by, created_on):
+    return urllib.urlencode({
+            "token": 'xoxp-113070057776-211135045057-212852625397-a02dc2cae27533deca6f9583815fe60f',
+            "channel": in_channel,
+            "link_names": "true",
+            "username": "@fgauge via /map",
+            "attachments": json.dumps([
+                {
+                    "title": "Location of " + location_for + ", click <" + change_url + "|here> to update.",
+                    "color": "#36a64f",
+                    "image_url": image_url,
+                    "attachment_type": "default",
+                    "footer": "Location added by " + created_by + " <!date^" + created_on + "^ on {date} at {time}.|.>"
+                    }
+                ])
+            })
+
+
 def create_slack_response (in_channel, location_for, image_url, change_url, created_by, created_on):
     return json.dumps(
             {
@@ -47,19 +65,3 @@ def create_failed_slack_response (message):
                 "text": "Something went terribly wrong :explodyparrot:. Please contact @tflend.\n`" + message + "`"
             }
         )
-def create_send_slack_message(in_channel, location_for, change_url, image_url, created_by, created_on):
-    return urllib.urlencode({
-            "token": 'xoxp-113070057776-211135045057-212852625397-a02dc2cae27533deca6f9583815fe60f',
-            "channel": in_channel,
-            "link_names": "true",
-            "username": "@fgauge via /map",
-            "attachments": json.dumps([
-                {
-                    "title": "Location of " + location_for + ", click <" + change_url + "|here> to update.",
-                    "color": "#36a64f",
-                    "image_url": image_url,
-                    "attachment_type": "default",
-                    "footer": "Location added by " + created_by + " <!date^" + created_on + "^ on {date} at {time}.|.>"
-                    }
-                ])
-            })
