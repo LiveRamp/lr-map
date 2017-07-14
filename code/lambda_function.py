@@ -29,7 +29,7 @@ locations = {
   "Corner": (0.85, 0.85)
 }
 
-LOCATIONS_TABLE_NAME = "Locations"
+LOCATIONS_TABLE_NAME = "MapLocations"
 
 dynamodb_client = boto3.client('dynamodb')
 s3_client = boto3.client('s3')
@@ -73,7 +73,7 @@ def create_and_upload_image(responseText):
 
     escapedLocationName = urllib.quote(locationName)
 
-    link_to_frontend = "http://mapsstatic.s3-website-us-east-1.amazonaws.com/"
+    link_to_frontend = "http://***REMOVED***.s3-website-us-east-1.amazonaws.com/"
     expandedUserName = "<@" + requesterUserId + "|" + requesterUserName + ">"
 
     data = {
@@ -95,7 +95,7 @@ def create_and_upload_image(responseText):
       response = create_slack_response_not_found(locationName, change_url)
       return respond(None, response)
 
-    bucket = "maps42"
+    bucket = "slack-map-images"
     md5 = hashlib.md5()
     md5.update(escapedLocationName)
     filename = str(md5.hexdigest()) + "_" + str(time.strftime("%H:%M:%S")) + ".gif"
@@ -109,7 +109,7 @@ def create_and_upload_image(responseText):
       create_location_image(location_x, location_y, filepath)
       s3_client.upload_file(filepath, bucket, filename)
 
-    image_url =  "https://s3.amazonaws.com/maps42/" + filename
+    image_url =  "https://s3.amazonaws.com/" + bucket + "/" + filename
 
     response = create_slack_response(locationName, image_url, change_url, created_by, created_on)
     return respond(None, response)

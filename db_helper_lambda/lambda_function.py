@@ -7,7 +7,7 @@ import urllib
 import ast
 import time
 
-LOCATIONS_TABLE_NAME = "Locations"
+LOCATIONS_TABLE_NAME = "MapLocations"
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -25,7 +25,7 @@ def respond(err, res=None):
 
 def add_to_db(entityName, created_by, x, y, floor):
     dynamodb_client.put_item(
-      TableName="Locations",
+      TableName=LOCATIONS_TABLE_NAME,
       Item={
         "entityName": {
           "S": entityName
