@@ -4,7 +4,7 @@ import base64
 
 def create_send_slack_message(in_channel, location_for, change_url, image_url, created_by, created_on):
     return base64.b32encode(urllib.urlencode({
-            "token": 'xoxp-113070057776-211135045057-212852625397-a02dc2cae27533deca6f9583815fe60f',
+            "token": 'xoxp-76626825879-169433398609-213106662900-ff609783bfac5a5a8dac32618a941c0b',
             "channel": in_channel,
             "link_names": "true",
             "as_user": "false",
