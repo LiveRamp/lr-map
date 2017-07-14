@@ -134,15 +134,10 @@ def interactive_action (responseText, action):
         value = jsonDict[u"actions"][0]["value"]
         logger.info("value:")
         value = base64.urlsafe_b64decode(value)
-        # value["attachments"]["image_url"] += "abcdef"
-        logger.info("before replacement: " + value)
-        # value = value.replace("\\\"", "\"")
-        # logger.info("after replacement: " + value)
-        # value = json.loads(value)
-        # value["attachments"] = json.loads(value["attachments"])
         logger.info(value)
-        response = urllib2.urlopen(url, data=value)
-        #return respond(None, value)
+        response = urllib2.urlopen(url, data=value).read()
+        if json.loads(response)["ok"] == False:
+            logger.error("Error during post message: "str(response))
 
     return respond(None, '{ "delete_original" : "true" }')
 
