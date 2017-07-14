@@ -126,12 +126,14 @@ def interactive_action (responseText, action):
         value = jsonDict[u"actions"][0]["value"]
         logger.info("value:")
         value = base64.b32decode(value)
-        value = value.replace("\\\"", "\"")
+        logger.info("before replacement: " + value)
+        # value = value.replace("\\\"", "\"")
+        # logger.info("after replacement: " + value)
         # value = json.loads(value)
         # value["attachments"] = json.loads(value["attachments"])
         logger.info(value)
         #response = urllib2.urlopen(url, data=value)
-        return respond(None, json.dumps(value))
+        return respond(None, value)
 
 
     return respond(None, '{ "delete_original" : "true" }')
