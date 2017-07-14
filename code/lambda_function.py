@@ -38,11 +38,10 @@ s3_client = boto3.client('s3')
 if "PROD" in os.environ:
   link_to_frontend = "http://***REMOVED***.s3-website-us-east-1.amazonaws.com/"
   bucket = "slack-map-images"
-if "TEST" in os.environ:
+elif "TEST" in os.environ:
   link_to_frontend = "http://***REMOVED***-test.s3-website-us-east-1.amazonaws.com/"
   bucket = "slack-map-images-test"
-if (productionEnvironment and testEnvironment) or (not productionEnvironment and not testEnvironment):
-  print "Don't know whether this is production or test environment."
+else:
   sys.exit(1)
 
 def respond(err, res=None):
@@ -96,8 +95,7 @@ def create_and_upload_image(responseText, _):
       display_name = locationName[1] + locationName.split('|')[1][:-1]
     else:
       display_name = locationName
-    change_url = link_to_frontend 
-        + "?data=" + base64.urlsafe_b64encode(json.dumps(data))
+    change_url = link_to_frontend + "?data=" + base64.urlsafe_b64encode(json.dumps(data))
 
     try:
       db_results = query_db(locationName)
