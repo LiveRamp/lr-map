@@ -116,7 +116,7 @@ def create_and_upload_image(responseText):
 
 def interactive_action (responseText):
     action = "cancel" #<todo tomasz>
-    return respond(None, "Hello")
+    return respond(None, "{}")
 
 
 def lambda_handler(event):
