@@ -7,8 +7,8 @@ DIRECTORY_WITH_DB_HELPER="./db_helper_lambda"
 DIRECTORY_WITH_FILES_TO_BE_COPIED="./environment"
 BUILD_DIR="./build"
 
-MAIN_ARCHIVE_FILENAME="archive_temporary123455125214.zip" # guaranteed to be unique
-DB_HELPER_ARCHIVE_FILENAME="archive_temporary2222222222215.zip" # guaranteed to be unique
+MAIN_ARCHIVE_FILENAME="archive_main_123455125214.zip" # guaranteed to be unique
+DB_HELPER_ARCHIVE_FILENAME="archive_db_2222222222215.zip" # guaranteed to be unique
 
 mkdir $BUILD_DIR
 cp -r $DIRECTORY_WITH_CONTENT/* $BUILD_DIR
@@ -31,5 +31,5 @@ aws s3 cp ./code/frontend/img/17th.png s3://$S3_STATIC_CONTENT_BUCKET_NAME/img/1
 aws s3 cp ./code/frontend/img/pin.png s3://$S3_STATIC_CONTENT_BUCKET_NAME/img/pin.png
 
 rm -r $BUILD_DIR
-rm $MAIN_ARCHIVE_FILENAME
-rm $DB_HELPER_ARCHIVE_FILENAME
+# rm $MAIN_ARCHIVE_FILENAME
+# rm $DB_HELPER_ARCHIVE_FILENAME
