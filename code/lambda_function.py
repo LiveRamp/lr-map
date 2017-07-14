@@ -118,7 +118,7 @@ def interactive_action (responseText):
     return respond(None, "{}")
 
 
-def lambda_handler(event):
+def lambda_handler(event, context):
     data = event[u"body"]
     responseText = parse_qs(data)
 
