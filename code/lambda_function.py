@@ -63,9 +63,7 @@ def query_db(locationName):
       "created_on": response[u"Item"][u"createdon"][u"S"]
   }
 
-def create_and_upload_image(event, context):
-    data = event[u"body"]
-    responseText = parse_qs(data)
+def create_and_upload_image(responseText):
     try:
         locationName = responseText[u"text"][0]
         requesterUserName = responseText[u"user_name"][0]
@@ -116,13 +114,21 @@ def create_and_upload_image(event, context):
     response = create_slack_response(locationName, image_url, change_url, created_by, created_on)
     return respond(None, response)
 
+def interactive_action (responseText):
+    action = "cancel"  #<todo tomasz>
+    return respond(None, "Hello")
 
-def lambda_handler(event, context):
+
+def lambda_handler(event):
+    data = event[u"body"]
+    responseText = parse_qs(data)
 
     request_type = "create_and_upload_image" #<todo tomasz>
 
     request_type_to_action = {
-            "create_and_upload_image": create_and_upload_image
+            "create_and_upload_image": create_and_upload_image,
+            "interactive_action": interactive_action
             }
 
-    return request_type_to_action[request_type](event, context)
+    return request_type_to_action[request_type](responseText)
+
