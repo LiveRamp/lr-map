@@ -137,7 +137,7 @@ def interactive_action (responseText, action):
         logger.info(value)
         response = urllib2.urlopen(url, data=value).read()
         if json.loads(response)["ok"] == False:
-            logger.error("Error during post message: "str(response))
+            logger.error("Error during post message: " + str(response))
 
     return respond(None, '{ "delete_original" : "true" }')
 
