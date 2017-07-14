@@ -18,6 +18,7 @@ from botocore.exceptions import ClientError
 import urllib
 import hashlib
 from urlparse import urlparse, parse_qs
+import sys
 
 
 logger = logging.getLogger()
@@ -33,6 +34,16 @@ LOCATIONS_TABLE_NAME = "MapLocations"
 
 dynamodb_client = boto3.client('dynamodb')
 s3_client = boto3.client('s3')
+
+productionEnvironment, testEnvironment = False, False
+if "PROD" in os.environ:
+  productionEnvironment = True
+if "TEST" in os.environ:
+  testEnvironment = True
+if (productionEnvironment and testEnvironment) or (not productionEnvironment and not testEnvironment):
+  print "Don't know whether this is production or test environment."
+  sys.exit(1)
+
 
 def respond(err, res=None):
     return {
@@ -74,7 +85,10 @@ def create_and_upload_image(responseText, _):
 
     escapedLocationName = urllib.quote(locationName)
 
-    link_to_frontend = "http://***REMOVED***.s3-website-us-east-1.amazonaws.com/"
+    if productionEnvironment:
+      link_to_frontend = "http://***REMOVED***.s3-website-us-east-1.amazonaws.com/"
+    else if testEnvironment:
+      link_to_frontend = "http://***REMOVED***-test.s3-website-us-east-1.amazonaws.com/"
     expandedUserName = "<@" + requesterUserId + "|" + requesterUserName + ">"
 
     data = {
@@ -96,7 +110,11 @@ def create_and_upload_image(responseText, _):
       response = create_slack_response_not_found(locationName, change_url)
       return respond(None, response)
 
-    bucket = "slack-map-images"
+    if productionEnvironment:
+      bucket = "slack-map-images"
+    else if testEnvironment:
+      bucket = "slack-map-images-test"
+
     md5 = hashlib.md5()
     md5.update(escapedLocationName)
     filename = str(md5.hexdigest()) + "_" + str(time.strftime("%H:%M:%S")) + ".gif"
