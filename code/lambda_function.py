@@ -3,7 +3,7 @@ import json
 import logging
 import os
 
-from base64 import b64decode
+import base64
 import os
 
 from PIL import Image, ImageDraw
@@ -107,19 +107,34 @@ def create_and_upload_image(responseText, _):
       logger.info("The file already exists, so a new one will not be created.")
     except ClientError as e:
       logger.info("Creating the file because of the error: " + str(e))
-      create_location_image(location_x, location_y, filepath)
+      create_location_image(location_x, location_y, filepath, floor)
       s3_client.upload_file(filepath, bucket, filename)
 
     image_url =  "https://s3.amazonaws.com/" + bucket + "/" + filename
 
     response = create_slack_response(in_channel, locationName, image_url, change_url, created_by, created_on)
+    logger.info(response)
     return respond(None, response)
 
 def interactive_action (responseText, action):
     url = 'https://slack.com/api/chat.postMessage'
+    text = "text"
     if action == "send":
-        request_data = "value"
-        response = urllib2.urlopen(url, data=request_data)
+        payload = responseText[u"payload"][0]
+
+        jsonDict = json.loads(payload)
+        value = jsonDict[u"actions"][0]["value"]
+        logger.info("value:")
+        value = base64.b32decode(value)
+        # value["attachments"]["image_url"] += "abcdef"
+        logger.info("before replacement: " + value)
+        # value = value.replace("\\\"", "\"")
+        # logger.info("after replacement: " + value)
+        # value = json.loads(value)
+        # value["attachments"] = json.loads(value["attachments"])
+        logger.info(value)
+        response = urllib2.urlopen(url, data=value)
+        #return respond(None, value)
 
     return respond(None, '{ "delete_original" : "true" }')
 
