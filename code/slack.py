@@ -1,7 +1,7 @@
 import json
 import urllib
 
-def create_slack_response (location_for, image_url, change_url, created_by, created_on):
+def create_slack_response (in_channel, location_for, image_url, change_url, created_by, created_on, send_value):
     return json.dumps(
             {
                 "attachments": [
@@ -9,6 +9,7 @@ def create_slack_response (location_for, image_url, change_url, created_by, crea
 			"title": "Location of " + location_for + ", click <" + change_url + "|here> to update.",
                         "color": "#36a64f",
                         "image_url": image_url,
+                        "fallback": "Looks like your slack client is to old.",
                         "callback_id": "map",
                         "attachment_type": "default",
 			"footer": "Location added by " + created_by + " <!date^" + created_on + "^ on {date} at {time}.|.>",
@@ -17,7 +18,7 @@ def create_slack_response (location_for, image_url, change_url, created_by, crea
                                 "name": "send",
                                 "text": "Send",
                                 "type": "button",
-                                "value": "send",
+                                "value": create_send_slack_message(in_channel, location_for, change_url, image_url, created_by, created_on),
                                 "style": "primary"
                                 },
                             {
