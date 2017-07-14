@@ -63,7 +63,7 @@ def query_db(locationName):
       "created_on": response[u"Item"][u"createdon"][u"S"]
   }
 
-def create_and_upload_image(responseText):
+def create_and_upload_image(responseText, _):
     try:
         locationName = responseText[u"text"][0]
         requesterUserName = responseText[u"user_name"][0]
@@ -132,9 +132,14 @@ def lambda_handler(event, context):
     responseText = parse_qs(data)
     logger.info("responseText: " + str(responseText))
 
-    if "cancel" in str(event) or "Send" in str(event):
+    if "action_ts" in str(event):
+      if "cancel" in str(event):
+        action = "cancel"
+      else:
+        action = "send"
       request_type = "interactive_action"
     else:
+      action = "fetch_image"
       request_type = "create_and_upload_image"
 
     request_type_to_action = {
@@ -142,5 +147,5 @@ def lambda_handler(event, context):
             "interactive_action": interactive_action
             }
 
-    return request_type_to_action[request_type](responseText)
+    return request_type_to_action[request_type](responseText, action)
 
