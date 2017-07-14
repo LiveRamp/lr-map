@@ -115,14 +115,24 @@ def create_and_upload_image(responseText):
 
 def interactive_action (responseText):
     action = "cancel" #<todo tomasz>
-    return respond(None, "{}")
+    return respond(None, create_failed_slack_response("{}"))
 
 
 def lambda_handler(event, context):
+    logger.info("Looks like autoamtic deployment works. event: " + str(event))
     data = event[u"body"]
     responseText = parse_qs(data)
 
-    request_type = "create_and_upload_image" #<todo tomasz>
+    # request_type = "interactive_action" #<todo tomasz>
+    # request_type = "create_and_upload_image" #<todo tomasz>
+
+    if "payload" in str(event):
+      request_type = "interactive_action"
+    else:
+      request_type = "create_and_upload_image"
+
+    # request_type = "create_and_upload_image"
+
 
     request_type_to_action = {
             "create_and_upload_image": create_and_upload_image,
