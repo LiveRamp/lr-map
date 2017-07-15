@@ -38,9 +38,11 @@ s3_client = boto3.client('s3')
 if "PROD" in os.environ:
   link_to_frontend = "http://***REMOVED***.s3-website-us-east-1.amazonaws.com/"
   bucket = "slack-map-images"
+  token = "xoxp-76626825879-169433398609-213106662900-ff609783bfac5a5a8dac32618a941c0b"
 elif "TEST" in os.environ:
   link_to_frontend = "http://***REMOVED***-test.s3-website-us-east-1.amazonaws.com/"
   bucket = "slack-map-images-test"
+  token = "xoxp-113070057776-211135045057-212852625397-a02dc2cae27533deca6f9583815fe60f"
 else:
   sys.exit(1)
 
@@ -121,7 +123,7 @@ def create_and_upload_image(responseText, _):
 
     image_url =  "https://s3.amazonaws.com/" + bucket + "/" + filename
 
-    response = create_slack_response(in_channel, locationName, image_url, change_url, created_by, created_on)
+    response = create_slack_response(in_channel, locationName, image_url, change_url, created_by, created_on, token)
     logger.info(response)
     return respond(None, response)
 
