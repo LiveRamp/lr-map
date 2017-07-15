@@ -84,6 +84,7 @@ def create_and_upload_image(responseText, _):
 
     escapedLocationName = urllib.quote(locationName)
 
+    # TODO make this resistant
     if locationName.startswith("<"):
       display_name = locationName[1] + locationName.split('|')[1][:-1]
     else:
