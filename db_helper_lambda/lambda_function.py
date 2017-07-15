@@ -54,23 +54,27 @@ def lambda_handler(event, context):
     logger.info("eventData:")
     logger.info(eventData)
 
-    decoded = base64.urlsafe_b64decode(eventData)
+    toUtf = eventData.encode('UTF-8')
+    logger.info("toUtf:")
+    logger.info(toUtf)
+
+    decoded = base64.urlsafe_b64decode(toUtf)
     logger.info("decoded:")
     logger.info(decoded)
 
     data = json.loads(decoded)
     logger.info("data:")
     logger.info(data)
-    
-    # x = event[u"queryStringParameters"][u"x"]
-    # y = event[u"queryStringParameters"][u"y"]
-    # floor = event[u"queryStringParameters"][u"floor"]
-    # location = data["locationName"]
-    # created_by = data["expandedUserName"]
 
-    # add_to_db(location, created_by, x, y, floor)
+    x = event[u"queryStringParameters"][u"x"]
+    y = event[u"queryStringParameters"][u"y"]
+    floor = event[u"queryStringParameters"][u"floor"]
+    location = data["locationName"]
+    created_by = data["expandedUserName"]
 
-    # textreply = str((location, created_by, x, y, floor))
+    add_to_db(location, created_by, x, y, floor)
+
+    textreply = str((location, created_by, x, y, floor))
 
     reply = 'var result = { success: true }'
     return respond(None, reply)
