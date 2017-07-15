@@ -136,7 +136,7 @@ def interactive_action (responseText, action):
         jsonDict = json.loads(payload)
         value = jsonDict[u"actions"][0]["value"]
         logger.info("value:")
-        value = base64.urlsafe_b64decode(value)
+        value = base64.urlsafe_b64decode(value.encode("UTF-8"))
         logger.info(value)
         response = urllib2.urlopen(url, data=value).read()
         if json.loads(response)["ok"] == False:
