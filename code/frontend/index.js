@@ -53,7 +53,6 @@ window.onload = function() {
 
   floor_element.addEventListener('click', function (e) {
     floor = (((floor + 1) - 16) % 2) + 16;
-    floor_element.innerHTML = '<i class="fa fa-refresh fa-lg"></i> ' + floor + 'th floor'
     image_element.style = 'background-image: url("./img/' + floor + 'th.png");'
   });
 
