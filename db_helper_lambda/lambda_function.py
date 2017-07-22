@@ -10,6 +10,9 @@ import base64
 
 LOCATIONS_TABLE_NAME = "MapLocations"
 
+if "TEST" in os.environ:
+  LOCATIONS_TABLE_NAME += "Staging"
+
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 

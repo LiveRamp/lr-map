@@ -1,3 +1,5 @@
+ENV="TESTING"
+
 AWS_LAMBDA_MAIN_FUNCTION_NAME="***REMOVED***"
 AWS_LAMBDA_ADD_TO_DB_FUNCTION_NAME="***REMOVED***-db-helper"
 S3_STATIC_CONTENT_BUCKET_NAME="***REMOVED***"
@@ -14,11 +16,13 @@ mkdir $BUILD_DIR
 cp -r $DIRECTORY_WITH_CONTENT/* $BUILD_DIR
 cp -r $DIRECTORY_WITH_FILES_TO_BE_COPIED/* $BUILD_DIR
 
-AWS_PROFILE=${AWS_PROFILE:-"TEST"}
-CLI_PROFILE_ARG=" --profile $AWS_PROFILE"
+AWS_PROFILE="PROD"
 
-if [ "$AWS_PROFILE" = "TEST" ]; then
-    S3_STATIC_CONTENT_BUCKET_NAME="$S3_STATIC_CONTENT_BUCKET_NAME-test" # nothing if on production
+if [ "$ENV" = "TESTING" ]; then
+	AWS_LAMBDA_MAIN_FUNCTION_NAME="$AWS_LAMBDA_MAIN_FUNCTION_NAME-staging"
+	AWS_LAMBDA_ADD_TO_DB_FUNCTION_NAME="$AWS_LAMBDA_ADD_TO_DB_FUNCTION_NAME-staging"
+    S3_STATIC_CONTENT_BUCKET_NAME="$S3_STATIC_CONTENT_BUCKET_NAME-staging"
+
 fi
 
 ditto -c -k --sequesterRsrc $BUILD_DIR $MAIN_ARCHIVE_FILENAME
@@ -27,7 +31,7 @@ ditto -c -k --sequesterRsrc $DIRECTORY_WITH_DB_HELPER $DB_HELPER_ARCHIVE_FILENAM
 aws lambda update-function-code --function-name $AWS_LAMBDA_MAIN_FUNCTION_NAME --zip-file fileb://$MAIN_ARCHIVE_FILENAME --profile $AWS_PROFILE
 aws lambda update-function-code --function-name $AWS_LAMBDA_ADD_TO_DB_FUNCTION_NAME --zip-file fileb://$DB_HELPER_ARCHIVE_FILENAME --profile $AWS_PROFILE
 
-
+# TODO: make an array of files
 aws s3 cp ./code/frontend/index.html s3://$S3_STATIC_CONTENT_BUCKET_NAME/index.html --profile $AWS_PROFILE
 aws s3 cp ./code/frontend/index.js s3://$S3_STATIC_CONTENT_BUCKET_NAME/index.js --profile $AWS_PROFILE
 aws s3 cp ./code/frontend/style.css s3://$S3_STATIC_CONTENT_BUCKET_NAME/style.css --profile $AWS_PROFILE
