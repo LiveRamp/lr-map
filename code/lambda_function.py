@@ -49,6 +49,7 @@ else:
   sys.exit(1)
 
 def respond(err, res=None):
+    logger.info("[response to slack] " + res)
     return {
         'statusCode': '400' if err else '200',
         'body': err.message if err else res,
@@ -66,7 +67,7 @@ def query_db(locationName):
       }
     }
   )
-  logger.info("Response: " + str(response))
+  logger.info("[response from db] " + json.dumps(response))
 
   # TODO: react if the conference room is missing
   return {
@@ -127,7 +128,6 @@ def create_and_upload_image(responseText, _):
     image_url =  "https://s3.amazonaws.com/" + bucket + "/" + filename
 
     response = create_slack_response(in_channel, locationName, image_url, change_url, created_by, created_on, token)
-    logger.info(response)
     return respond(None, response)
 
 def interactive_action (responseText, action):
@@ -138,9 +138,8 @@ def interactive_action (responseText, action):
 
         jsonDict = json.loads(payload)
         value = jsonDict[u"actions"][0]["value"]
-        logger.info("value:")
         value = base64.urlsafe_b64decode(value.encode("UTF-8"))
-        logger.info(value)
+        logger.info("[send value] " + json.dumps(value))
         response = urllib2.urlopen(url, data=value).read()
         if json.loads(response)["ok"] == False:
             logger.error("Error during post message: " + str(response))
@@ -148,10 +147,10 @@ def interactive_action (responseText, action):
     return respond(None, '{ "delete_original" : "true" }')
 
 def lambda_handler(event, context):
-    logger.info("Looks like autoamtic deployment works. event: " + str(event))
+    logger.info("[event] " + json.dumps(event))
     data = event[u"body"]
     responseText = parse_qs(data)
-    logger.info("responseText: " + str(responseText))
+    logger.info("[parsed event] " + json.dumps(responseText))
 
     if "action_ts" in str(event):
       if "send8037123" in str(event):
