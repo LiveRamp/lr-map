@@ -87,6 +87,7 @@ def create_and_upload_image(responseText, _):
     except KeyError:
         return respond(None, create_failed_slack_response("Are you sure this message was sent from Slack?"))
 
+    locationName = locationName.lower()
     escapedLocationName = urllib.quote(locationName)
 
     # TODO make this resistant
