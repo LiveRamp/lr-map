@@ -35,11 +35,13 @@ s3_client = boto3.client('s3')
 
 if "PROD" in os.environ:
   link_to_frontend = "http://***REMOVED***.s3-website-us-east-1.amazonaws.com/"
+  link_to_db_helper = 'https://hbe9t0i30j.execute-api.us-east-1.amazonaws.com/prod/***REMOVED***-db-helper'
   bucket = "slack-map-images"
   token = "xoxp-76626825879-169433398609-213106662900-ff609783bfac5a5a8dac32618a941c0b"
   LOCATIONS_TABLE_NAME = "MapLocations"
 elif "TEST" in os.environ:
   link_to_frontend = "http://***REMOVED***-staging.s3-website-us-east-1.amazonaws.com/"
+  link_to_db_helper = 'https://***REMOVED***.execute-api.us-east-1.amazonaws.com/prod/***REMOVED***-db-helper-staging'
   bucket = "***REMOVED***"
   token = "xoxp-113070057776-211135045057-212852625397-a02dc2cae27533deca6f9583815fe60f"
   LOCATIONS_TABLE_NAME = "MapLocationsStaging"
@@ -94,6 +96,7 @@ def create_and_upload_image(responseText, _):
 
     expandedUserName = "<@" + requesterUserId + "|" + requesterUserName + ">"
     data = {
+        "url": link_to_db_helper,
         "name": display_name,
         "expandedUserName" : expandedUserName,
         "locationName": locationName

@@ -70,8 +70,7 @@ window.onload = function() {
 
       alertify.closeLogOnClick(true).log(loadingMsg);
 
-      var url = 'https://***REMOVED***.execute-api.us-east-1.amazonaws.com/prod/***REMOVED***-db-helper-staging?data='
-        + dataEncoded + "&x=" + x + "&y=" + y + "&floor=" + floor;
+      var url = data.url + '?data=' + dataEncoded + "&x=" + x + "&y=" + y + "&floor=" + floor;
 
       var script = document.createElement('script');
       script.setAttribute('src', url);
