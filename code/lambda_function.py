@@ -2,6 +2,7 @@ import boto3
 import json
 import logging
 import os
+import re
 
 import base64
 import os
@@ -78,6 +79,12 @@ def query_db(locationName):
       "created_on": response[u"Item"][u"createdon"][u"S"]
   }
 
+def getDisplayName(locationName):
+    p = re.compile(r'<(.).*?\|(.*?)>')
+    display_name = p.sub(r'\1\2', locationName)
+    return display_name.replace("&amp;", "&").replace("&lt;", "<").replace("&gt;", ">")
+
+
 def create_and_upload_image(responseText, _):
     try:
         locationName = responseText[u"text"][0]
@@ -87,20 +94,10 @@ def create_and_upload_image(responseText, _):
     except KeyError:
         return respond(None, create_failed_slack_response("Are you sure this message was sent from Slack?"))
 
-    locationName = locationName.lower()
-    escapedLocationName = urllib.quote(locationName)
-
-    # TODO make this resistant
-    if locationName.startswith("<"):
-      display_name = locationName[1] + locationName.split('|')[1][:-1]
-    else:
-      display_name = locationName
-
-    expandedUserName = "<@" + requesterUserId + "|" + requesterUserName + ">"
     data = {
         "url": link_to_db_helper,
-        "name": display_name,
-        "expandedUserName" : expandedUserName,
+        "name": getDisplayName(locationName),
+        "createdBy" : "<@" + requesterUserId + "|" + requesterUserName + ">",
         "locationName": locationName
     }
     change_url = link_to_frontend + "?data=" + base64.urlsafe_b64encode(json.dumps(data))
@@ -113,6 +110,7 @@ def create_and_upload_image(responseText, _):
       response = create_slack_response_not_found(locationName, change_url)
       return respond(None, response)
 
+    escapedLocationName = urllib.quote(locationName)
     md5 = hashlib.md5()
     md5.update(escapedLocationName)
     filename = str(md5.hexdigest()) + "_" + str(time.strftime("%H:%M:%S")) + ".gif"

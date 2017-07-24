@@ -73,7 +73,7 @@ def lambda_handler(event, context):
     y = event[u"queryStringParameters"][u"y"]
     floor = event[u"queryStringParameters"][u"floor"]
     location = data["locationName"]
-    created_by = data["expandedUserName"]
+    created_by = data["createdBy"]
 
     add_to_db(location, created_by, x, y, floor)
 
