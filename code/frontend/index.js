@@ -15,7 +15,7 @@ var dataEncoded;
 })();
 
 function decodeData(data) {
-    data = data.replace("-", "+").replace("_", "/")
+    data = data.replace(/-/g, "+").replace(/_/, "/")
     data = JSON.parse(window.atob(data))
   return data
 }
