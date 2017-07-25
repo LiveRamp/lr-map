@@ -29,26 +29,26 @@ def respond(err, res=None):
 
 def add_to_db(entityName, created_by, x, y, floor):
     dynamodb_client.put_item(
-      TableName=LOCATIONS_TABLE_NAME,
-      Item={
-        "entityName": {
-          "S": entityName
-        },
-          "createdby": {
-            "S": str(created_by)
-          },
-          "createdon": {
-            "S": str(int(round(time.time())))
-          },
-          "x": {
-            "S": str(x)
-          },
-          "y": {
-            "S": str(y)
-          },
-          "floor": {
-            "S": str(floor)
-          }
+        TableName=LOCATIONS_TABLE_NAME,
+        Item={
+            "entityName": {
+                "S": entityName
+            },
+            "createdby": {
+                "S": str(created_by)
+            },
+            "createdon": {
+                "S": str(int(round(time.time())))
+            },
+            "x": {
+                "S": str(x)
+            },
+            "y": {
+                "S": str(y)
+            },
+            "floor": {
+                "S": str(floor)
+            }
         }
     )
 
