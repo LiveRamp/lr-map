@@ -60,56 +60,41 @@ def respond(err, res=None):
     }
 
 def query_db(locationName):
-  response = dynamodb_client.get_item(
+    response = dynamodb_client.get_item(
     TableName=LOCATIONS_TABLE_NAME,
     Key= {
       "entityName": {
         "S": locationName
       }
     }
-  )
-  logger.info("[response from db] " + json.dumps(response))
-
-  # TODO: react if the conference room is missing
-  return {
-      "location_x": float(response[u"Item"][u"x"][u"S"]),
-      "location_y": float(response[u"Item"][u"y"][u"S"]),
-      "floor": response[u"Item"][u"floor"][u"S"],
-      "created_by": response[u"Item"][u"createdby"][u"S"],
-      "created_on": response[u"Item"][u"createdon"][u"S"]
-  }
+    )
+    logger.info("[response from db] " + json.dumps(response))
+    if (u"Item" in response):
+        return True, {
+          "location_x": float(response[u"Item"][u"x"][u"S"]),
+          "location_y": float(response[u"Item"][u"y"][u"S"]),
+          "floor": response[u"Item"][u"floor"][u"S"],
+          "created_by": response[u"Item"][u"createdby"][u"S"],
+          "created_on": response[u"Item"][u"createdon"][u"S"]
+        }
+    else:
+        return False, {}
 
 def getDisplayName(locationName):
     p = re.compile(r'<(.).*?\|(.*?)>')
     display_name = p.sub(r'\1\2', locationName)
     return display_name.replace("&amp;", "&").replace("&lt;", "<").replace("&gt;", ">")
 
-
-def create_and_upload_image(responseText, _):
-    try:
-        locationName = responseText[u"text"][0]
-        requesterUserName = responseText[u"user_name"][0]
-        requesterUserId = responseText[u"user_id"][0]
-        in_channel = responseText[u"channel_id"][0]
-    except KeyError:
-        return respond(None, create_failed_slack_response("Are you sure this message was sent from Slack?"))
-
+def create_change_url(locationName, requesterUserId, requesterUserName):
     data = {
         "url": link_to_db_helper,
         "name": getDisplayName(locationName),
         "createdBy" : "<@" + requesterUserId + "|" + requesterUserName + ">",
         "locationName": locationName
     }
-    change_url = link_to_frontend + "?data=" + base64.urlsafe_b64encode(json.dumps(data))
+    return link_to_frontend + "?data=" + base64.urlsafe_b64encode(json.dumps(data))
 
-    try:
-      db_results = query_db(locationName)
-      for key, val in db_results.items():
-        exec(key + '=val')
-    except Exception as e:
-      response = create_slack_response_not_found(locationName, change_url)
-      return respond(None, response)
-
+def create_image(locationName, location_x, location_y, floor):
     escapedLocationName = urllib.quote(locationName)
     md5 = hashlib.md5()
     md5.update(escapedLocationName)
@@ -124,10 +109,26 @@ def create_and_upload_image(responseText, _):
       create_location_image(location_x, location_y, filepath, floor)
       s3_client.upload_file(filepath, bucket, filename)
 
-    image_url =  "https://s3.amazonaws.com/" + bucket + "/" + filename
+    return "https://s3.amazonaws.com/" + bucket + "/" + filename
 
-    response = create_slack_response(in_channel, locationName, image_url, change_url, created_by, created_on, token)
-    return respond(None, response)
+def create_and_upload_image(responseText, _):
+    try:
+        locationName = responseText[u"text"][0]
+        requesterUserName = responseText[u"user_name"][0]
+        requesterUserId = responseText[u"user_id"][0]
+        in_channel = responseText[u"channel_id"][0]
+    except KeyError:
+        return respond(None, create_failed_slack_response("Are you sure this message was sent from Slack?"))
+
+    change_url = create_change_url(locationName, requesterUserId, requesterUserName)
+    locationExists, db_results = query_db(locationName)
+    if locationExists:
+        image_url = create_image(locationName, db_results["location_x"], db_results["location_y"], db_results["floor"])
+        response = create_slack_response(in_channel, locationName, image_url, change_url, db_results["created_by"], db_results["created_on"], token)
+        return respond(None, response)
+    else:
+        response = create_slack_response_not_found(locationName, change_url)
+        return respond(None, response)
 
 def interactive_action (responseText, action):
     url = 'https://slack.com/api/chat.postMessage'
