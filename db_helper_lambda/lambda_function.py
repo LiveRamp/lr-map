@@ -8,10 +8,12 @@ import ast
 import time
 import base64
 
-LOCATIONS_TABLE_NAME = "MapLocations"
-
-if "TEST" in os.environ:
-  LOCATIONS_TABLE_NAME += "Staging"
+if "PROD" in os.environ:
+    LOCATIONS_TABLE_NAME = "MapLocations"
+elif "TEST" in os.environ:
+    LOCATIONS_TABLE_NAME = "MapLocationsStaging"
+else:
+    sys.exit(1)
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
