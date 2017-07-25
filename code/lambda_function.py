@@ -36,7 +36,7 @@ s3_client = boto3.client('s3')
 
 if "PROD" in os.environ:
     link_to_frontend = "http://***REMOVED***.s3-website-us-east-1.amazonaws.com/"
-    link_to_db_helper = 'https://hbe9t0i30j.execute-api.us-east-1.amazonaws.com/prod/***REMOVED***-db-helper'
+    link_to_db_helper = 'https://***REMOVED***.execute-api.us-east-1.amazonaws.com/prod/***REMOVED***-db-helper'
     bucket = "slack-map-images"
     token = "xoxp-76626825879-169433398609-213106662900-ff609783bfac5a5a8dac32618a941c0b"
     LOCATIONS_TABLE_NAME = "MapLocations"
