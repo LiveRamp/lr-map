@@ -79,3 +79,31 @@ def create_failed_slack_response (message):
                 "text": "Something went terribly wrong :explodyparrot:. Please contact @tflend.\n`" + message + "`"
             }
         )
+
+def create_slack_guide (created_by):
+    return json.dumps(
+        {
+            "text": "Hi " + created_by+ " please take a look below to see how */map* works.\nFor a complete guide please click *<https://support.liveramp.com/display/CI/Find+and+share+meeting+rooms%2C+people%27s+desks+and+other+locations|here>*.",
+            "attachments": [
+                {
+                    "fallback": "/map Quick Guide",
+                    "color": "#36a64f",
+                    "title": "Quick Guide",
+                    "fields": [
+                        {
+                            "title": "/map apollo",
+                            "value": "Search for the location of any meeting room.",
+                        },
+                        {
+                            "title": "/map @userNameTag",
+                            "value": "Search for the location of a persons desk.\nHint: Please set your own desk location by typing: /map " + created_by,
+                        },
+                        {
+                            "title": "/map yourLocation",
+                            "value": "Use any other string to temporarly set the location of anything.",
+                        }
+                    ],
+                }
+            ]
+        }
+    )

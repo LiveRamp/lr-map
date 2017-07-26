@@ -73,11 +73,11 @@ def getDisplayName(locationName):
     display_name = p.sub(r'\1\2', locationName)
     return display_name.replace("&amp;", "&").replace("&lt;", "<").replace("&gt;", ">")
 
-def create_change_url(locationName, requesterUserId, requesterUserName):
+def create_change_url(locationName, created_by):
     data = {
         "url": link_to_db_helper,
         "name": getDisplayName(locationName),
-        "createdBy" : "<@" + requesterUserId + "|" + requesterUserName + ">",
+        "createdBy" : created_by,
         "locationName": locationName
     }
     return link_to_frontend + "?data=" + base64.urlsafe_b64encode(json.dumps(data))
@@ -100,19 +100,20 @@ def create_image(locationName, location_x, location_y, floor):
     return "https://s3.amazonaws.com/" + bucket + "/" + filename
 
 def create_and_upload_image(responseText, _):
-    try:
+    requesterUserId = responseText[u"user_id"][0]
+    created_by = "<@" + requesterUserId + "|" + responseText[u"user_name"][0] + ">"
+    in_channel = responseText[u"channel_id"][0]
+
+    if u"text" in responseText:
         locationName = responseText[u"text"][0]
-        requesterUserName = responseText[u"user_name"][0]
-        requesterUserId = responseText[u"user_id"][0]
-        in_channel = responseText[u"channel_id"][0]
-    except KeyError:
-        return respond(None, create_failed_slack_response("Are you sure this message was sent from Slack?"))
+    else:
+        return respond(None, create_slack_guide(created_by))
 
     is_authenticated, access_token = query_auth(requesterUserId)
     if not is_authenticated:
         return respond(None, create_slack_auth_response(slack_client_id, link_to_db_helper, team_id))
 
-    change_url = create_change_url(locationName, requesterUserId, requesterUserName)
+    change_url = create_change_url(locationName, created_by)
     locationExists, db_results = query_location(locationName)
     if locationExists:
         image_url = create_image(locationName, db_results["location_x"], db_results["location_y"], db_results["floor"])
