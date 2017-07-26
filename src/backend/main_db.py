@@ -106,10 +106,10 @@ def handle_auth(event):
     response = json.loads(response)
     if response["ok"] == True:
         add_to_auth(response["user_id"], response["access_token"])
-        return respond(None, "cool")
+        return respond(None, "Great success!")
     else:
         logger.error("[error during auth]")
-        return respond(None, "error")
+        return respond(None, "There was an error.")
 
 
 def main(event, context):

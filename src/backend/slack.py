@@ -6,11 +6,10 @@ def create_send_slack_message(in_channel, location_for, change_url, image_url, c
     return base64.urlsafe_b64encode(urllib.urlencode({
             "token": token,
             "channel": in_channel,
-            "link_names": "true",
-            "as_user": "false",
-            "response_type": "in_channel",
+            "as_user": "true",
             "attachments": json.dumps([{
-                    "title": "Location of " + location_for + ", click <" + change_url + "|here> to update.",
+                    "title": "Location of " + location_for + " [/map " + location_for + "]",
+                    "text": "Click <" + change_url + "|here> to update.",
                     "color": "#36a64f",
                     "image_url": image_url,
                     "attachment_type": "default",
@@ -24,7 +23,8 @@ def create_slack_response (in_channel, location_for, image_url, change_url, crea
             {
                 "attachments": [
                     {
-			"title": "Location of " + location_for + ", click <" + change_url + "|here> to update.",
+                        "title": "Location of " + location_for + " [/map " + location_for + "]",
+                        "text": "Click <" + change_url + "|here> to update.",
                         "color": "#36a64f",
                         "image_url": image_url,
                         "fallback": "Someone sent you a location via /map.",
@@ -68,7 +68,7 @@ def create_slack_auth_response (client_id, redirect_uri):
         })
     return json.dumps(
             {
-                "text": "Please authorize this app *<" + url + "|here>*!"
+                "text": ":authoritah: Please authorize this app *<" + url + "|here>*!"
             }
         )
 
