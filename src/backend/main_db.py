@@ -10,24 +10,8 @@ import time
 import base64
 from backend.env import *
 
-if "PROD" in os.environ:
-    link_to_db_helper = 'https://***REMOVED***.execute-api.us-east-1.amazonaws.com/prod/***REMOVED***-db-helper'
-    LOCATIONS_TABLE_NAME = "MapLocations"
-    AUTH_TABLE_NAME = "AuthTokens"
-    slack_client_id = "***REMOVED***"
-    slack_client_secret = "***REMOVED***"
-elif "TEST" in os.environ:
-    link_to_db_helper = 'https://***REMOVED***.execute-api.us-east-1.amazonaws.com/prod/***REMOVED***-db-helper-staging'
-    LOCATIONS_TABLE_NAME = "MapLocationsStaging"
-    AUTH_TABLE_NAME = "AuthTokensStaging"
-    slack_client_id = "***REMOVED***"
-    slack_client_secret = "***REMOVED***"
-else:
-    sys.exit(1)
-
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
-
 dynamodb_client = boto3.client('dynamodb')
 
 def respond(err, res=None):

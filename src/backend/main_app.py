@@ -4,26 +4,22 @@ import logging
 import os
 import re
 import urllib
+import urllib2
 import hashlib
 import base64
+import time
 from urlparse import urlparse, parse_qs
-
 from botocore.exceptions import ClientError
 from PIL import Image, ImageDraw
-import time
-import urllib2
 
 from backend.env import *
 from backend.slack import *
 from backend.image import create_location_image
 
-
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
-
 dynamodb_client = boto3.client('dynamodb')
 s3_client = boto3.client('s3')
-
 
 def respond(err, res=None):
     logger.info("[response to slack] " + res)
