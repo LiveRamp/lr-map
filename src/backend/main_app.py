@@ -3,23 +3,19 @@ import json
 import logging
 import os
 import re
-
+import urllib
+import hashlib
 import base64
-import os
+from urlparse import urlparse, parse_qs
 
+from botocore.exceptions import ClientError
 from PIL import Image, ImageDraw
 import time
 import urllib2
 
-from slack import create_slack_response, create_failed_slack_response, create_slack_response_not_found, create_send_slack_message
-from image import create_location_image
-
-from botocore.exceptions import ClientError
-
-import urllib
-import hashlib
-from urlparse import urlparse, parse_qs
-import sys
+from backend.env import *
+from backend.slack import *
+from backend.image import create_location_image
 
 
 logger = logging.getLogger()
@@ -34,20 +30,6 @@ locations = {
 dynamodb_client = boto3.client('dynamodb')
 s3_client = boto3.client('s3')
 
-if "PROD" in os.environ:
-    link_to_frontend = "http://***REMOVED***.s3-website-us-east-1.amazonaws.com/"
-    link_to_db_helper = 'https://***REMOVED***.execute-api.us-east-1.amazonaws.com/prod/***REMOVED***-db-helper'
-    bucket = "slack-map-images"
-    token = "xoxp-76626825879-169433398609-213106662900-ff609783bfac5a5a8dac32618a941c0b"
-    LOCATIONS_TABLE_NAME = "MapLocations"
-elif "TEST" in os.environ:
-    link_to_frontend = "http://***REMOVED***-staging.s3-website-us-east-1.amazonaws.com/"
-    link_to_db_helper = 'https://***REMOVED***.execute-api.us-east-1.amazonaws.com/prod/***REMOVED***-db-helper-staging'
-    bucket = "***REMOVED***"
-    token = "xoxp-113070057776-211135045057-212852625397-a02dc2cae27533deca6f9583815fe60f"
-    LOCATIONS_TABLE_NAME = "MapLocationsStaging"
-else:
-    sys.exit(1)
 
 def respond(err, res=None):
     logger.info("[response to slack] " + res)
@@ -59,7 +41,7 @@ def respond(err, res=None):
         },
     }
 
-def query_db(locationName):
+def query_location(locationName):
     response = dynamodb_client.get_item(
         TableName=LOCATIONS_TABLE_NAME,
         Key= {
@@ -68,7 +50,7 @@ def query_db(locationName):
             }
         }
     )
-    logger.info("[response from db] " + json.dumps(response))
+    logger.info("[response from location query] " + json.dumps(response))
     if (u"Item" in response):
         return True, {
             "location_x": float(response[u"Item"][u"x"][u"S"]),
@@ -77,6 +59,21 @@ def query_db(locationName):
             "created_by": response[u"Item"][u"createdby"][u"S"],
             "created_on": response[u"Item"][u"createdon"][u"S"]
         }
+    else:
+        return False, {}
+
+def query_auth(user_id):
+    response = dynamodb_client.get_item(
+        TableName=AUTH_TABLE_NAME,
+        Key= {
+            "user_id": {
+                "S": user_id
+            }
+        }
+    )
+    logger.info("[response from auth query] " + json.dumps(response))
+    if (u"Item" in response):
+        return True, response[u"Item"][u"access_token"][u"S"]
     else:
         return False, {}
 
@@ -120,8 +117,12 @@ def create_and_upload_image(responseText, _):
     except KeyError:
         return respond(None, create_failed_slack_response("Are you sure this message was sent from Slack?"))
 
+    is_authenticated, access_token = query_auth(requesterUserId)
+    if not is_authenticated:
+        return respond(None, create_slack_auth_response(slack_client_id, link_to_db_helper))
+
     change_url = create_change_url(locationName, requesterUserId, requesterUserName)
-    locationExists, db_results = query_db(locationName)
+    locationExists, db_results = query_location(locationName)
     if locationExists:
         image_url = create_image(locationName, db_results["location_x"], db_results["location_y"], db_results["floor"])
         response = create_slack_response(in_channel, locationName, image_url, change_url, db_results["created_by"], db_results["created_on"], token)
@@ -146,7 +147,7 @@ def interactive_action (responseText, action):
 
     return respond(None, '{ "delete_original" : "true" }')
 
-def lambda_handler(event, context):
+def main(event, context):
     logger.info("[event] " + json.dumps(event))
     data = event[u"body"]
     responseText = parse_qs(data)
@@ -170,4 +171,3 @@ def lambda_handler(event, context):
             }
 
     return request_type_to_action[request_type](responseText, action)
-

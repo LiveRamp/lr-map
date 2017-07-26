@@ -4,14 +4,24 @@ import logging
 import os
 
 import urllib
+import urllib2
 import ast
 import time
 import base64
+from backend.env import *
 
 if "PROD" in os.environ:
+    link_to_db_helper = 'https://***REMOVED***.execute-api.us-east-1.amazonaws.com/prod/***REMOVED***-db-helper'
     LOCATIONS_TABLE_NAME = "MapLocations"
+    AUTH_TABLE_NAME = "AuthTokens"
+    slack_client_id = "***REMOVED***"
+    slack_client_secret = "***REMOVED***"
 elif "TEST" in os.environ:
+    link_to_db_helper = 'https://***REMOVED***.execute-api.us-east-1.amazonaws.com/prod/***REMOVED***-db-helper-staging'
     LOCATIONS_TABLE_NAME = "MapLocationsStaging"
+    AUTH_TABLE_NAME = "AuthTokensStaging"
+    slack_client_id = "***REMOVED***"
+    slack_client_secret = "***REMOVED***"
 else:
     sys.exit(1)
 
@@ -29,7 +39,7 @@ def respond(err, res=None):
         },
     }
 
-def add_to_db(entityName, created_by, x, y, floor):
+def add_to_locations(entityName, created_by, x, y, floor):
     dynamodb_client.put_item(
         TableName=LOCATIONS_TABLE_NAME,
         Item={
@@ -54,7 +64,7 @@ def add_to_db(entityName, created_by, x, y, floor):
         }
     )
 
-def lambda_handler(event, context):
+def handle_location(event):
     eventData = event[u"queryStringParameters"][u"data"]
     logger.info("eventData:")
     logger.info(eventData)
@@ -77,9 +87,50 @@ def lambda_handler(event, context):
     location = data["locationName"]
     created_by = data["createdBy"]
 
-    add_to_db(location, created_by, x, y, floor)
+    add_to_locations(location, created_by, x, y, floor)
 
     textreply = str((location, created_by, x, y, floor))
 
     reply = 'var result = { success: true }'
     return respond(None, reply)
+
+
+def add_to_auth(user_id, access_token):
+    dynamodb_client.put_item(
+        TableName=AUTH_TABLE_NAME,
+        Item={
+            "user_id": {
+                "S": user_id
+            },
+            "access_token": {
+                "S": access_token
+            },
+        }
+    )
+    
+def handle_auth(event):
+    code = event[u"queryStringParameters"][u"code"]
+    url = "https://slack.com/api/oauth.access"
+    params = urllib.urlencode({
+        "client_id": slack_client_id,
+        "client_secret" : slack_client_secret,
+        "code" : code,
+        "redirect_uri" : link_to_db_helper,
+        })
+    response = urllib2.urlopen(url, params).read()
+    logger.info("[auth request response] " + response)
+    response = json.loads(response)
+    if response["ok"] == True:
+        add_to_auth(response["user_id"], response["access_token"])
+        return respond(None, "cool")
+    else:
+        logger.error("[error during auth]")
+        return respond(None, "error")
+
+
+def main(event, context):
+    logger.info("[event] " + json.dumps(event))
+    if u"code" in event[u"queryStringParameters"]:
+        return handle_auth(event)
+    else:
+        return handle_location(event)
