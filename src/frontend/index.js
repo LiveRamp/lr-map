@@ -58,8 +58,8 @@ window.onload = function() {
 
   update_element.addEventListener('click', function (e) {
     if (!x) {
-      var errorMsg = "Please set a location first."
-      alertify.delay(4000).closeLogOnClick(true).success(errorMsg);
+      var errorMsg = "Please click on the image to set the location"
+      alertify.delay(4000).closeLogOnClick(true).error(errorMsg);
       return;
     }
     if (!processingUpdate) {
