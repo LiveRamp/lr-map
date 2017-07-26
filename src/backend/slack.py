@@ -59,12 +59,13 @@ def create_slack_response_not_found (location_for, change_url):
             }
         )
 
-def create_slack_auth_response (client_id, redirect_uri):
+def create_slack_auth_response (client_id, redirect_uri, team):
     url = "https://slack.com/oauth/authorize?"
     url += urllib.urlencode({
         "client_id": client_id,
         "scope": "chat:write:user",
-        "redirect_uri" : redirect_uri,
+        "redirect_uri": redirect_uri,
+        "team": team,
         })
     return json.dumps(
             {

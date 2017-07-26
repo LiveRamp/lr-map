@@ -10,6 +10,7 @@ if "PROD" in os.environ:
     AUTH_TABLE_NAME = "AuthTokens"
     slack_client_id = "***REMOVED***"
     slack_client_secret = "***REMOVED***"
+    team_id = "***REMOVED***"
 elif "TEST" in os.environ:
     link_to_frontend = "http://***REMOVED***-staging.s3-website-us-east-1.amazonaws.com/"
     link_to_db_helper = 'https://***REMOVED***.execute-api.us-east-1.amazonaws.com/prod/***REMOVED***-db-helper-staging'
@@ -18,5 +19,6 @@ elif "TEST" in os.environ:
     AUTH_TABLE_NAME = "AuthTokensStaging"
     slack_client_id = "***REMOVED***"
     slack_client_secret = "***REMOVED***"
+    team_id = "***REMOVED***"
 else:
     sys.exit(1)

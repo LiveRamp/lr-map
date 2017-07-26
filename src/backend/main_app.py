@@ -109,7 +109,7 @@ def create_and_upload_image(responseText, _):
 
     is_authenticated, access_token = query_auth(requesterUserId)
     if not is_authenticated:
-        return respond(None, create_slack_auth_response(slack_client_id, link_to_db_helper))
+        return respond(None, create_slack_auth_response(slack_client_id, link_to_db_helper, team_id))
 
     change_url = create_change_url(locationName, requesterUserId, requesterUserName)
     locationExists, db_results = query_location(locationName)
