@@ -24,6 +24,7 @@ def respond(err, res=None):
     }
 
 def add_to_locations(entityName, created_by, x, y, floor):
+    entityName = entityName.lower()
     dynamodb_client.put_item(
         TableName=LOCATIONS_TABLE_NAME,
         Item={

@@ -32,6 +32,7 @@ def respond(err, res=None):
     }
 
 def query_location(locationName):
+    locationName = locationName.lower()
     response = dynamodb_client.get_item(
         TableName=LOCATIONS_TABLE_NAME,
         Key= {
