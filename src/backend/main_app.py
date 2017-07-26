@@ -123,9 +123,8 @@ def create_and_upload_image(responseText, _):
         return respond(None, response)
 
 def interactive_action (responseText, action):
-    url = 'https://slack.com/api/chat.postMessage'
-    text = "text"
     if action == "send":
+        url = 'https://slack.com/api/chat.postMessage'
         payload = responseText[u"payload"][0]
 
         jsonDict = json.loads(payload)

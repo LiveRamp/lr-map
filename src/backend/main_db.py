@@ -15,6 +15,7 @@ logger.setLevel(logging.INFO)
 dynamodb_client = boto3.client('dynamodb')
 
 def respond(err, res=None):
+    logger.info("[response to browser] " + res)
     return {
         'statusCode': '400' if err else '200',
         'body': err.message if err else res,
