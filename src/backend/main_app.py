@@ -115,7 +115,7 @@ def create_and_upload_image(responseText, _):
     locationExists, db_results = query_location(locationName)
     if locationExists:
         image_url = create_image(locationName, db_results["location_x"], db_results["location_y"], db_results["floor"])
-        response = create_slack_response(in_channel, locationName, image_url, change_url, db_results["created_by"], db_results["created_on"], token)
+        response = create_slack_response(in_channel, locationName, image_url, change_url, db_results["created_by"], db_results["created_on"], access_token)
         return respond(None, response)
     else:
         response = create_slack_response_not_found(locationName, change_url)
