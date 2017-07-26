@@ -21,12 +21,6 @@ from backend.image import create_location_image
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
-locations = {
-    "Dominion": (0.1, 0.6),
-    "Center": (0.5, 0.5),
-    "Corner": (0.85, 0.85)
-}
-
 dynamodb_client = boto3.client('dynamodb')
 s3_client = boto3.client('s3')
 
