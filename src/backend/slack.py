@@ -72,7 +72,7 @@ def create_failed_slack_response (message):
 
 def create_slack_guide (created_by):
     return json.dumps({
-            "text": "Hi " + created_by+ " please take a look below to see how */map* works.\nFor a complete guide please click *<https://support.liveramp.com/display/CI/Find+and+share+meeting+rooms%2C+people%27s+desks+and+other+locations|here>*.",
+            "text": "Hi " + created_by + " please take a look below to see how */map* works.\nFor a complete guide please click *<https://support.liveramp.com/display/CI/Find+and+share+locations+of+meeting+rooms+and+people%27s+desks|here>*.",
             "attachments": [{
                 "fallback": "/map Quick Guide",
                 "color": "#36a64f",
