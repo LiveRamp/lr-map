@@ -21,6 +21,8 @@ To set up the slack map, one has to create two S3 buckets, two AWS Lambdas and t
 
 The first bucket hosts static content of the website. The second bucket hosts images that are generated and later fetched by Slack. The first lambda executes ./src/backend/main_db.py, is responsible for storing authorization info and location info into the DynamoDB, and is called by the websites. The second lambda executes ./src/main_app.py, fetches the location data from the DB, and is called by using the Slack command.
 
+The lambdas should have an environmental variable set, either "PROD" or "TEST", depending on whether it's the production or testing environment. For safety reasons, if none of them is set, the lambda will exit with an error.
+
 ### Getting the access_token
 The first step every user has to complete is to give the app the rights to send messages as the user. This is important since we can not post to direct message channels otherwise. Please refer to the [Slack documentation](https://api.slack.com/docs/oauth) for how the authentication works.
 
