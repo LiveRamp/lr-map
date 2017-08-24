@@ -18,8 +18,6 @@ The **/map** callback URL is set in the *Slash commands* section of the Slack Ap
 ## Setting it up
 To set up the slack map, one has to create two S3 buckets, two AWS Lambdas and two DynamoDB tables. The credentials should be stored in src/backend/env.py.
 
-The first bucket hosts static content of the website. The second bucket hosts images that are generated and later fetched by Slack. The first lambda executes ./src/backend/main_db.py, is responsible for storing authorization info and location info into the DynamoDB, and is called by the websites. The second lambda executes ./src/main_app.py, fetches the location data from the DB, and is called by using the Slack command.
-
 The lambdas should have an environmental variable set, either "PROD" or "TEST", depending on whether it's the production or testing environment. For safety reasons, if none of them is set, the lambda will exit with an error.
 
 ### Getting the access_token
