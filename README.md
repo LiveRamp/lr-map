@@ -1,4 +1,4 @@
-# liveramp_map
+# slack map
 This project lets you use **/map** in Slack to find and share the location of meeting rooms, people or anything else.
 
 ## Technical Overview
@@ -10,12 +10,16 @@ There are two lambdas being used: the *app lambda* takes care of all the slack i
 
 The static content is stored in two buckets on S3. The *static content bucket* is used for hosting the website and the *image bucket* is used to store and serve the resulting gifs.
 
-
 There are two tables in DynamoDB. The *MapLocations table* contains all the location data and the *AuthTokens table* contains the access tokens which enable the app to send messages on behalf of the user.
 
 ## Technical Details
 It is recommended that you read the [usage guide](https://support.liveramp.com/display/CI/Find+and+share+locations+of+meeting+rooms+and+people%27s+desks) before continuing.
 The **/map** callback URL is set in the *Slash commands* section of the Slack App. This URL is queried whenever a user types **/map**. When a user presses a button on a message returned by the app the interactive messages URL is being called. This URL is set in the *Interactive messages* section. Both URLs should point to the main_app.py lambda.
+
+## Setting it up
+To set up the slack map, one has to create two S3 buckets, two AWS Lambdas and two DynamoDB tables. The credentials should be stored in src/backend/env.py.
+
+The first bucket hosts static content of the website. The second bucket hosts images that are generated and later fetched by Slack. The first lambda executes ./src/backend/main_db.py, is responsible for storing authorization info and location info into the DynamoDB, and is called by the websites. The second lambda executes ./src/main_app.py, fetches the location data from the DB, and is called by using the Slack command.
 
 ### Getting the access_token
 The first step every user has to complete is to give the app the rights to send messages as the user. This is important since we can not post to direct message channels otherwise. Please refer to the [Slack documentation](https://api.slack.com/docs/oauth) for how the authentication works.
