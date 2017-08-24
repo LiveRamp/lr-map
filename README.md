@@ -1,4 +1,4 @@
-# slack map
+# Liveramp map
 This project lets you use **/map** in Slack to find and share the location of meeting rooms, people or anything else.
 
 ## Technical Overview
