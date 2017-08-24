@@ -9,8 +9,8 @@ CODE_DIR="./src"
 LIB_DIR="./lib"
 BUILD_DIR="./build"
 
-APP_ARCHIVE_FILENAME="archive_app_123455125214.zip" # guaranteed to be unique
-DB_ARCHIVE_FILENAME="archive_db_2222222222215.zip" # guaranteed to be unique
+APP_ARCHIVE_FILENAME="./tmp/archive_app.zip" # guaranteed to be unique
+DB_ARCHIVE_FILENAME="./tmp/archive_db.zip" # guaranteed to be unique
 
 mkdir $BUILD_DIR
 cp -r $CODE_DIR/* $BUILD_DIR
@@ -33,3 +33,5 @@ aws s3 cp ./src/frontend/ s3://$S3_STATIC_CONTENT_BUCKET_NAME/ --recursive --pro
 rm -r $BUILD_DIR
 rm $APP_ARCHIVE_FILENAME
 rm $DB_ARCHIVE_FILENAME
+
+echo "Successfully deployed to $ENV."
