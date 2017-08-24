@@ -127,7 +127,6 @@ def interactive_action(responseText, action):
     if action == "send":
         url = 'https://slack.com/api/chat.postMessage'
         payload = responseText[u"payload"][0]
-
         jsonDict = json.loads(payload)
         value = jsonDict[u"actions"][0]["value"]
         value = base64.urlsafe_b64decode(value.encode("UTF-8"))

@@ -75,8 +75,6 @@ def handle_location(event):
 
     add_to_locations(location, created_by, x, y, floor)
 
-    textreply = str((location, created_by, x, y, floor))
-
     reply = 'var result = { success: true }'
     return respond(None, reply)
 
@@ -112,7 +110,6 @@ def handle_auth(event):
     else:
         logger.error("[error during auth]")
         return respond(None, "There was an error.")
-
 
 def main(event, context):
     logger.info("[event] " + json.dumps(event))

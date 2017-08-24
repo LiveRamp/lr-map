@@ -69,7 +69,7 @@ def create_failed_slack_response(message):
                 "text": "Something went terribly wrong :explodyparrot:. Please contact @tflend.\n`" + message + "`"
             })
 
-def create_slack_guide (created_by):
+def create_slack_guide(created_by):
     return json.dumps({
             "text": "Hi " + created_by + ", please take a look below to see how */map* works.",
             "attachments": [{
