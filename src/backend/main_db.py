@@ -115,23 +115,8 @@ def handle_auth(event):
 
 
 def main(event, context):
-    #update_table()
     logger.info("[event] " + json.dumps(event))
     if u"code" in event[u"queryStringParameters"]:
         return handle_auth(event)
     else:
         return handle_location(event)
-
-def update_table():
-    response = dynamodb_client.scan(TableName=LOCATIONS_TABLE_NAME)
-    for i in response['Items']:
-        response = dynamodb_client.delete_item(
-            TableName=LOCATIONS_TABLE_NAME,
-            Key= {
-                "entityName": {
-                    "S": i[u"entityName"][u"S"],
-                }
-            }
-        )
-        #i[u"entityName"][u"S"] = i[u"entityName"][u"S"].lower()
-        dynamodb_client.put_item(TableName=LOCATIONS_TABLE_NAME, Item=i)
