@@ -123,7 +123,7 @@ def create_and_upload_image(responseText, _):
         response = create_slack_response_not_found(locationName, change_url)
         return respond(None, response)
 
-def interactive_action (responseText, action):
+def interactive_action(responseText, action):
     if action == "send":
         url = 'https://slack.com/api/chat.postMessage'
         payload = responseText[u"payload"][0]

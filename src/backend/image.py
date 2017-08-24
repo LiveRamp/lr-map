@@ -1,7 +1,7 @@
 from PIL import Image, ImageDraw
 import operator, math
 
-def create_location_image (drop_location_x, drop_location_y, result_path, floor):
+def create_location_image(drop_location_x, drop_location_y, result_path, floor):
     floor_map = Image.open( './frontend/img/' + floor + 'th.jpg' ).convert('RGBA')
     floor_map_copy = floor_map.copy()
 

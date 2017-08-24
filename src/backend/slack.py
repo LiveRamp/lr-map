@@ -46,13 +46,13 @@ def create_slack_response(in_channel, location_for, image_url, change_url, creat
                 }]
             })
 
-def create_slack_response_not_found (location_for, change_url):
+def create_slack_response_not_found(location_for, change_url):
     return json.dumps({
                 "text": "Whoops, it looks like we don't know where *" + location_for + "* is :sadparrot:.\n" 
                 + "Please help us out by setting the location *<" + change_url + "|here>*!"
             })
 
-def create_slack_auth_response (client_id, redirect_uri, team):
+def create_slack_auth_response(client_id, redirect_uri, team):
     url = "https://slack.com/oauth/authorize?"
     url += urllib.urlencode({
         "client_id": client_id,
@@ -64,7 +64,7 @@ def create_slack_auth_response (client_id, redirect_uri, team):
                 "text": "Please authorize this app *<" + url + "|here>*!"
             })
 
-def create_failed_slack_response (message):
+def create_failed_slack_response(message):
     return json.dumps({
                 "text": "Something went terribly wrong :explodyparrot:. Please contact @tflend.\n`" + message + "`"
             })
