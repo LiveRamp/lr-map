@@ -10,7 +10,7 @@ There are two lambdas being used: the *app lambda* takes care of all the slack i
 
 The static content is stored in two buckets on S3. The *static content bucket* is used for hosting the website and the *image bucket* is used to store and serve the resulting gifs.
 
-There are two tables in DynamoDB. The *MapLocations table* contains all the location data and the *AuthTokens table* contains the access tokens which enable the app to send messages on behalf of the user.
+This project uses DynamoDB as its database. Two tables are in use: the *MapLocations table* contains all the location data and the *AuthTokens table* contains the access tokens which enable the app to send messages on behalf of the user.
 
 ## Technical Details
 The **/map** callback URL is set in the *Slash commands* section of the Slack App. This URL is queried whenever a user types **/map**. When a user presses a button on a message returned by the app the interactive messages URL is being called. This URL is set in the *Interactive messages* section. Both URLs should point to the main_app.py lambda.
