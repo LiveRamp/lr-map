@@ -2,7 +2,7 @@ import json
 import urllib
 import base64
 
-def create_send_slack_message(in_channel, location_for, change_url, image_url, created_by, created_on, token):
+def create_slack_message_with_send(in_channel, location_for, change_url, image_url, created_by, created_on, token):
     return base64.urlsafe_b64encode(urllib.urlencode({
             "token": token,
             "channel": in_channel,
@@ -17,8 +17,7 @@ def create_send_slack_message(in_channel, location_for, change_url, image_url, c
                     }])
             }))
 
-
-def create_slack_response (in_channel, location_for, image_url, change_url, created_by, created_on, token):
+def create_slack_response(in_channel, location_for, image_url, change_url, created_by, created_on, token):
     return json.dumps({
                 "attachments": [{
                     "title": "Location of " + location_for + " [/map " + location_for + "]",
@@ -34,7 +33,7 @@ def create_slack_response (in_channel, location_for, image_url, change_url, crea
                             "name": "send8037123",
                             "text": "Send",
                             "type": "button",
-                            "value": create_send_slack_message(in_channel, location_for, change_url, image_url, created_by, created_on, token),
+                            "value": create_slack_message_with_send(in_channel, location_for, change_url, image_url, created_by, created_on, token),
                             "style": "primary"
                         },
                         {
@@ -62,7 +61,7 @@ def create_slack_auth_response (client_id, redirect_uri, team):
         "team": team,
         })
     return json.dumps({
-                "text": ":authoritah: Please authorize this app *<" + url + "|here>*!"
+                "text": "Please authorize this app *<" + url + "|here>*!"
             })
 
 def create_failed_slack_response (message):
@@ -72,7 +71,7 @@ def create_failed_slack_response (message):
 
 def create_slack_guide (created_by):
     return json.dumps({
-            "text": "Hi " + created_by + " please take a look below to see how */map* works.\nFor a complete guide please click *<https://support.liveramp.com/display/CI/Find+and+share+locations+of+meeting+rooms+and+people%27s+desks|here>*.",
+            "text": "Hi " + created_by + ", please take a look below to see how */map* works.",
             "attachments": [{
                 "fallback": "/map Quick Guide",
                 "color": "#36a64f",
