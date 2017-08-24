@@ -9,8 +9,8 @@ CODE_DIR="./src"
 LIB_DIR="./lib"
 BUILD_DIR="./build"
 
-APP_ARCHIVE_FILENAME="./tmp/archive_app.zip" # guaranteed to be unique
-DB_ARCHIVE_FILENAME="./tmp/archive_db.zip" # guaranteed to be unique
+APP_ARCHIVE_FILENAME="./tmp/archive_app.zip"
+DB_ARCHIVE_FILENAME="./tmp/archive_db.zip"
 
 mkdir $BUILD_DIR
 cp -r $CODE_DIR/* $BUILD_DIR
