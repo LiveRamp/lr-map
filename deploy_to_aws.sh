@@ -1,5 +1,4 @@
 ENV="TESTING"
-AWS_PROFILE="PROD"
 
 AWS_LAMBDA_APP_FUNCTION_NAME=
 AWS_LAMBDA_DB_FUNCTION_NAME=
@@ -25,10 +24,10 @@ if [ "$ENV" = "TESTING" ]; then
   S3_STATIC_CONTENT_BUCKET_NAME="$S3_STATIC_CONTENT_BUCKET_NAME-staging"
 fi
 
-aws lambda update-function-code --function-name $AWS_LAMBDA_APP_FUNCTION_NAME --zip-file fileb://$APP_ARCHIVE_FILENAME --profile $AWS_PROFILE
-aws lambda update-function-code --function-name $AWS_LAMBDA_DB_FUNCTION_NAME --zip-file fileb://$DB_ARCHIVE_FILENAME --profile $AWS_PROFILE
+aws lambda update-function-code --function-name $AWS_LAMBDA_APP_FUNCTION_NAME --zip-file fileb://$APP_ARCHIVE_FILENAME
+aws lambda update-function-code --function-name $AWS_LAMBDA_DB_FUNCTION_NAME --zip-file fileb://$DB_ARCHIVE_FILENAME
 
-aws s3 cp ./src/frontend/ s3://$S3_STATIC_CONTENT_BUCKET_NAME/ --recursive --profile $AWS_PROFILE
+aws s3 cp ./src/frontend/ s3://$S3_STATIC_CONTENT_BUCKET_NAME/ --recursive
 
 rm -r $BUILD_DIR
 rm $APP_ARCHIVE_FILENAME

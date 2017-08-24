@@ -26,7 +26,6 @@ The lambdas should have an environmental variable set, either "PROD" or "TEST", 
 The S3 buckets should allow public read to be able to be used with Slack.
 One of the buckets should enable static website hosting. The "Index document" should be set to "index.html".
 
-
 ### DynamoDB Tables
 Two DynamoDB Tables should be created. The first one, which stores locations, should have a primary key named "entityName" of type String. The second one, which stores athorization tokens, should have a primary key named "user_id" of type String.
 
@@ -35,6 +34,10 @@ The role should have the following AWS permissions:
 - lambda execution
 - S3 full access
 - DynamoDB full access
+
+### Deployment
+To deploy the application, fill in the three fields with lambda function names and the static content bucket name in the script [deploy_to_aws.sh] and execute it. The deployment defaults to the staging environment.
+The deployment script uses the default profile in AWS CLI, so make sure that you configured the credentials to AWS properly. You can do it using [this](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html) guide.
 
 ### Getting the access_token
 The first step every user has to complete is to give the app the rights to send messages as the user. This is important since we can not post to direct message channels otherwise. Please refer to the [Slack documentation](https://api.slack.com/docs/oauth) for how the authentication works.
