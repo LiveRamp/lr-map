@@ -1,15 +1,16 @@
 import os
 import sys
-# Please complete the credentials for both production and staging environment.
+# Please complete the links and credentials for both production and staging environment.
 #
 # link_to_frontend is the link to the static content on s3.
-# link_to_db_helper is the link to the lambda that has the db helper.
-# bucket is the name of the S3 bucket with pictures.
+# link_to_db_helper is the link to the API gateway of the lambda that has the db helper.
+# bucket is the name of the S3 bucket with location pictures.
 # LOCATIONS_TABLE_NAME is the name of the DynamoDB table storing locations.
 # AUTH_TABLE_NAME is the name of the DynamoDB table storing authorization information.
 # slack_client_id is the client ID copied from Slack's App Credentials.
 # slack_client_secret is the client Secret copied from Slack's App Credentials.
-# team_id is the ID of your slack team.
+# team_id is the ID of your slack team. It can be found by executing a Slack Web API call that
+# fetches information about the team.
 
 if "PROD" in os.environ:
     link_to_frontend =

@@ -16,9 +16,20 @@ There are two tables in DynamoDB. The *MapLocations table* contains all the loca
 The **/map** callback URL is set in the *Slash commands* section of the Slack App. This URL is queried whenever a user types **/map**. When a user presses a button on a message returned by the app the interactive messages URL is being called. This URL is set in the *Interactive messages* section. Both URLs should point to the main_app.py lambda.
 
 ## Setting it up
-To set up the slack map, one has to create two S3 buckets, two AWS Lambdas and two DynamoDB tables. The credentials should be stored in src/backend/env.py.
+To set up the slack map, one has to create two AWS Lambdas, two S3 buckets and two DynamoDB tables. The credentials/links to them should be stored in src/backend/env.py. In that file, you can find more detailed instructions.
 
+Both lambdas should be set up to use Python 2.7. The size of RAM should be modified accordingly, to make sure that the requests made don't timeout. When creating them, choose the option to create an API gateway too.
 The lambdas should have an environmental variable set, either "PROD" or "TEST", depending on whether it's the production or testing environment. For safety reasons, if none of them is set, the lambda will exit with an error.
+
+The S3 buckets should allow public read to be able to be used with Slack.
+One of the buckets should enable static website hosting. The "Index document" should be set to "index.html".
+
+Two DynamoDB Tables should be created. The first one, which stores locations, should have a primary key named "entityName" of type String. The second one, which stores athorization tokens, should have a primary key named "user_id" of type String.
+
+The role should have the following AWS permissions:
+- lambda execution
+- S3 full access
+- DynamoDB full access
 
 ### Getting the access_token
 The first step every user has to complete is to give the app the rights to send messages as the user. This is important since we can not post to direct message channels otherwise. Please refer to the [Slack documentation](https://api.slack.com/docs/oauth) for how the authentication works.
